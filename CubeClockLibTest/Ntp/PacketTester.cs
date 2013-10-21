@@ -56,7 +56,7 @@ namespace CubeClockLibTest.Ntp
             var packet = new CubeClock.Ntp.Packet();
             Assert.IsTrue(packet.IsValid());
             Assert.AreEqual(CubeClock.Ntp.LeapIndicator.NoWarning, packet.LeapIndicator);
-            Assert.AreEqual(CubeClock.Ntp.VersionNumber.Version3, packet.Version);
+            Assert.AreEqual(3, packet.Version);
             Assert.AreEqual(CubeClock.Ntp.Mode.Client, packet.Mode);
             Assert.AreEqual(CubeClock.Ntp.Stratum.Unspecified, packet.Stratum);
             Assert.AreEqual(0, packet.PollInterval);

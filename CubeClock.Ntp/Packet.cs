@@ -126,22 +126,9 @@ namespace CubeClock.Ntp
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public VersionNumber Version
+        public uint Version
         {
-            get
-            {
-                var value = (byte)((_raw[0] & 0x38) >> 3);
-                switch (value)
-                {
-                    case 0: return Ntp.VersionNumber.Unknown;
-                    case 1: return Ntp.VersionNumber.Version1;
-                    case 2: return Ntp.VersionNumber.Version2;
-                    case 3: return Ntp.VersionNumber.Version3;
-                    case 4: return Ntp.VersionNumber.Version4;
-                    default: break;
-                }
-                return Ntp.VersionNumber.Unknown;
-            }
+            get { return (uint)((_raw[0] & 0x38) >> 3); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -556,10 +543,10 @@ namespace CubeClock.Ntp
         {
             switch (Version)
             {
-                case VersionNumber.Version3:
+                case 3:
                     var ipaddr = new IPAddress(new byte[] { _raw[12], _raw[13], _raw[14], _raw[15] });
                     return ipaddr.ToString();
-                case VersionNumber.Version4:
+                case 4:
                     return string.Empty;
                 default:
                     break;

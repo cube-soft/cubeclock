@@ -48,24 +48,6 @@ namespace CubeClock.Ntp
 
     /* --------------------------------------------------------------------- */
     ///
-    /// VersionNumber
-    /// 
-    /// <summary>
-    /// バージョン番号 (VN: Version Number) の状態を定義した列挙型です。
-    /// </summary>
-    ///
-    /* --------------------------------------------------------------------- */
-    public enum VersionNumber : uint
-    {
-        Unknown = 0,    // 0 - Unknown
-        Version1,       // 1 - Version 1
-        Version2,       // 2 - Version 2
-        Version3,       // 3 - Version 3 (Normally NTP server)
-        Version4        // 4 - Version 4 (Normally SNTP server)
-    }
-
-    /* --------------------------------------------------------------------- */
-    ///
     /// Mode
     /// 
     /// <summary>
