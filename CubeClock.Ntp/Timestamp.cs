@@ -49,7 +49,7 @@ namespace CubeClock.Ntp
     /// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     /// 
     /// 尚、RFC 4330 にしたがって最上位ビットが 0 の場合は時刻が 2036 年
-    /// から 2104 年の間であるとみなして変換を行います。
+    /// から 2104 年の間であると見なして変換を行います。
     /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
@@ -77,7 +77,7 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ToTimeStamp
+        /// ToTimestamp
         /// 
         /// <summary>
         /// DateTime オブジェクトから NTP タイムスタンプへ変換します。
@@ -87,10 +87,10 @@ namespace CubeClock.Ntp
         public static Int64 ToTimestamp(DateTime datetime)
         {
             var origin = (_ReverseTerm <= datetime) ? _ReverseTerm : _BaseTerm;
-            var tick = (datetime - origin).TotalMilliseconds;
+            var ticks  = (datetime - origin).TotalMilliseconds;
 
             var seconds  = (UInt32)((datetime - origin).TotalSeconds);
-            var fraction = (UInt32)((tick % 1000) * _CompensatingRate32 / 1000);
+            var fraction = (UInt32)((ticks % 1000) * _CompensatingRate32 / 1000);
 
             return (Int64)(((UInt64)seconds << 32) | fraction);
         }

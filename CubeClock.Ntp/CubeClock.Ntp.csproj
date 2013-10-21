@@ -78,6 +78,8 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="FixedPoint.cs" />
+    <Compile Include="Packet.cs" />
+    <Compile Include="Parameter.cs" />
     <Compile Include="Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

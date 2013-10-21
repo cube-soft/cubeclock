@@ -42,5 +42,10 @@ namespace CubeClockLibTest.Ntp
     [TestFixture]
     public class ClientTester
     {
+        [Test]
+        public void TestRun()
+        {
+            Assert.Pass();
+        }
     }
 }

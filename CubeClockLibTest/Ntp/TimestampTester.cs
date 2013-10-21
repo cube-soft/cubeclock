@@ -58,10 +58,10 @@ namespace CubeClockLibTest.Ntp
             var now = DateTime.Now;
             var timestamp = CubeClock.Ntp.Timestamp.ToTimestamp(now);
             var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
-            Assert.AreEqual(now.Year, converted.Year);
-            Assert.AreEqual(now.Month, converted.Month);
-            Assert.AreEqual(now.Day, converted.Day);
-            Assert.AreEqual(now.Hour, converted.Hour);
+            Assert.AreEqual(now.Year,   converted.Year);
+            Assert.AreEqual(now.Month,  converted.Month);
+            Assert.AreEqual(now.Day,    converted.Day);
+            Assert.AreEqual(now.Hour,   converted.Hour);
             Assert.AreEqual(now.Minute, converted.Minute);
             Assert.AreEqual(now.Second, converted.Second);
         }
@@ -87,10 +87,10 @@ namespace CubeClockLibTest.Ntp
             var datetime = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
             var timestamp = CubeClock.Ntp.Timestamp.ToTimestamp(datetime);
             var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
-            Assert.AreEqual(year, converted.Year);
-            Assert.AreEqual(month, converted.Month);
-            Assert.AreEqual(day, converted.Day);
-            Assert.AreEqual(hour, converted.Hour);
+            Assert.AreEqual(year,   converted.Year);
+            Assert.AreEqual(month,  converted.Month);
+            Assert.AreEqual(day,    converted.Day);
+            Assert.AreEqual(hour,   converted.Hour);
             Assert.AreEqual(minute, converted.Minute);
             Assert.AreEqual(second, converted.Second);
         }
