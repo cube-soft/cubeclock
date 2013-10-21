@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// SntpClientTester.cs
+/// NtpClient.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,21 +26,19 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using NUnit.Framework;
 
-namespace CubeClockLibTest
+namespace CubeClock
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// SntpClientTester
+    /// NtpClient
     ///
     /// <summary>
-    /// SntpClient クラスのテストをするためのクラスです。
+    /// NTP でサーバと通信するためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    [TestFixture]
-    public class SntpClientTester
+    public class NtpClient
     {
     }
 }
