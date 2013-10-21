@@ -77,7 +77,9 @@ namespace CubeClockLibTest.Ntp
         ///
         /* ----------------------------------------------------------------- */
         [TestCase(1970,  1,  1,  0,  0,  0)]
+        [TestCase(1999, 12, 31, 23, 59, 59)]
         [TestCase(2000,  1,  1,  0,  0,  0)]
+        [TestCase(2036,  2,  7,  6, 28, 15)]
         [TestCase(2036,  2,  7,  6, 28, 16)]
         [TestCase(2104,  1,  1,  0,  0,  0)]
         public void TestConvertDetail(int year, int month, int day, int hour, int minute, int second)

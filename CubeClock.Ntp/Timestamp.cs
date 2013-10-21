@@ -47,6 +47,9 @@ namespace CubeClock.Ntp
     /// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     /// |                  Seconds Fraction (0-padded)                  |
     /// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    /// 
+    /// 尚、RFC 4330 にしたがって最上位ビットが 0 の場合は時刻が 2036 年
+    /// から 2104 年の間であるとみなして変換を行います。
     /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
@@ -67,7 +70,7 @@ namespace CubeClock.Ntp
             var fraction = (UInt32)(timestamp & UInt32.MaxValue);
 
             var milliseconds = (Int64)seconds * 1000 + (fraction * 1000) / _CompensatingRate32;
-            var origin = ((seconds & _ConpensatingRate31) == 0) ? _MidTerm : _InitialTerm;
+            var origin = ((seconds & _ConpensatingRate31) == 0) ? _ReverseTerm : _BaseTerm;
             
             return origin + TimeSpan.FromMilliseconds(milliseconds);
         }
@@ -83,7 +86,7 @@ namespace CubeClock.Ntp
         /* ----------------------------------------------------------------- */
         public static Int64 ToTimestamp(DateTime datetime)
         {
-            var origin = (_MidTerm <= datetime) ? _MidTerm : _InitialTerm;
+            var origin = (_ReverseTerm <= datetime) ? _ReverseTerm : _BaseTerm;
             var tick = (datetime - origin).TotalMilliseconds;
 
             var seconds  = (UInt32)((datetime - origin).TotalSeconds);
@@ -95,8 +98,8 @@ namespace CubeClock.Ntp
         #region Constant variables
         private static readonly Int64  _CompensatingRate32 = 0x100000000L;
         private static readonly UInt32 _ConpensatingRate31 =  0x80000000u;
-        private static readonly DateTime _InitialTerm = new DateTime(1900, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        private static readonly DateTime _MidTerm = _InitialTerm.AddSeconds(UInt32.MaxValue);
+        private static readonly DateTime _BaseTerm     = new DateTime(1900, 1, 1, 0,  0,  0, 0, DateTimeKind.Utc);
+        private static readonly DateTime _ReverseTerm  = new DateTime(2036, 2, 7, 6, 28, 16, 0, DateTimeKind.Utc);
         #endregion
     }
 }
