@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// NtpTimeStamp.cs
+/// TimeStamp.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -27,11 +27,11 @@
 /* ------------------------------------------------------------------------- */
 using System;
 
-namespace CubeClock
+namespace CubeClock.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// NtpTimeStamp
+    /// TimeStamp
     ///
     /// <summary>
     /// NTP タイムスタンプと DateTime タイムオブジェクトの相互変換機能を
@@ -50,7 +50,7 @@ namespace CubeClock
     /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
-    public abstract class NtpTimeStamp
+    public abstract class TimeStamp
     {
         /* ----------------------------------------------------------------- */
         ///

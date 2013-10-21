@@ -1,4 +1,4 @@
-﻿namespace CubeClock
+﻿namespace CubeClock.Ntp
 {
     partial class MainForm
     {

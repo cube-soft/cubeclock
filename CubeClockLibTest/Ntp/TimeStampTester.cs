@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// NtpClientTester.cs
+/// Ntp/TimeStampTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -28,19 +28,19 @@
 using System;
 using NUnit.Framework;
 
-namespace CubeClockLibTest
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// NtpTimeStampTester
+    /// TimeStampTester
     ///
     /// <summary>
-    /// NtpTimeStamp クラスのテストをするためのクラスです。
+    /// TimeStamp クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class NtpTimeStampTester
+    public class TimeStampTester
     {
         /* ----------------------------------------------------------------- */
         ///
@@ -56,8 +56,8 @@ namespace CubeClockLibTest
         public void TestConvert()
         {
             var now = DateTime.Now;
-            var timestamp = CubeClock.NtpTimeStamp.ToTimeStamp(now);
-            var converted = CubeClock.NtpTimeStamp.ToDateTime(timestamp);
+            var timestamp = CubeClock.Ntp.TimeStamp.ToTimeStamp(now);
+            var converted = CubeClock.Ntp.TimeStamp.ToDateTime(timestamp);
             Assert.AreEqual(now.Year, converted.Year);
             Assert.AreEqual(now.Month, converted.Month);
             Assert.AreEqual(now.Day, converted.Day);
@@ -83,8 +83,8 @@ namespace CubeClockLibTest
         public void TestConvertDetail(int year, int month, int day, int hour, int minute, int second)
         {
             var datetime = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
-            var timestamp = CubeClock.NtpTimeStamp.ToTimeStamp(datetime);
-            var converted = CubeClock.NtpTimeStamp.ToDateTime(timestamp);
+            var timestamp = CubeClock.Ntp.TimeStamp.ToTimeStamp(datetime);
+            var converted = CubeClock.Ntp.TimeStamp.ToDateTime(timestamp);
             Assert.AreEqual(year, converted.Year);
             Assert.AreEqual(month, converted.Month);
             Assert.AreEqual(day, converted.Day);

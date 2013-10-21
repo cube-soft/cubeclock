@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// NtpClientTester.cs
+/// Ntp/ClientTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -28,7 +28,7 @@
 using System;
 using NUnit.Framework;
 
-namespace CubeClockLibTest
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -40,7 +40,7 @@ namespace CubeClockLibTest
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class NtpClientTester
+    public class ClientTester
     {
     }
 }
