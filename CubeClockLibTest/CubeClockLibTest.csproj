@@ -80,7 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ntp\ClientTester.cs" />
-    <Compile Include="Ntp\TimeStampTester.cs" />
+    <Compile Include="Ntp\FixedPointTester.cs" />
+    <Compile Include="Ntp\TimestampTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
