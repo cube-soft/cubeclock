@@ -32,7 +32,7 @@ namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// NtpClientTester
+    /// ClientTester
     ///
     /// <summary>
     /// NtpClient クラスのテストをするためのクラスです。
@@ -42,10 +42,31 @@ namespace CubeClockLibTest.Ntp
     [TestFixture]
     public class ClientTester
     {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestReceive
+        /// 
+        /// <summary>
+        /// NTP サーバと通信するテストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
         [Test]
-        public void TestRun()
+        public void TestReceive()
         {
-            Assert.Pass();
+            try
+            {
+                var server = "time.windows.com";
+                var client = new CubeClock.Ntp.Client(server);
+                Assert.IsNotNullOrEmpty(client.Host.HostName);
+                Assert.IsTrue(client.Host.AddressList.Length > 0);
+                Assert.AreEqual(123, client.Port);
+                Assert.AreEqual(2000, client.ReceiveTimeout);
+
+                // TODO: どんなアサーションを入れれば良いか…？
+                var packet = client.Receive();
+            }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
     }
 }
