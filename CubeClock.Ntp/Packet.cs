@@ -63,6 +63,22 @@ namespace CubeClock.Ntp
         /// Packet (constructor)
         /// 
         /// <summary>
+        /// 引数に指定された時刻を用いて、送信用の NTP パケットとして
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Packet(DateTime creation)
+        {
+            _creation = creation;
+            _raw = CreateNewPacket();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Packet (constructor)
+        /// 
+        /// <summary>
         /// サーバから受信したパケットデータを用いて、オブジェクトを初期化
         /// します。
         /// </summary>
