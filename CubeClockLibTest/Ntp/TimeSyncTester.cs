@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// MainForm.cs
+/// Ntp/TimeSyncTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,85 +26,80 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
-using System.Windows.Forms;
+using System.ComponentModel;
+using NUnit.Framework;
 
-namespace CubeClock.Ntp
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// MainForm
+    /// TimeSyncTester
     /// 
     /// <summary>
-    /// メイン画面を表示するためのクラスです。
+    /// TimeSync クラスのテストを行うためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class MainForm : Form
+    [TestFixture]
+    public class TimeSyncTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm (constructor)
+        /// TestRun
         /// 
         /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
+        /// NTP サーバから時刻を取得して同期するテストを行います。
         /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public MainForm()
-        {
-            InitializeComponent();
-            ClockTimer.Start();
-        }
-
-        #region Event handlers
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ClockTimer_Tick
         /// 
-        /// <summary>
-        /// 一定時間ごとに実行されるイベントハンドラです。
-        /// </summary>
+        /// <remarks>
+        /// Windows Vista 以降、時刻の同期には管理者権限を必要とします。
+        /// そのため、時刻を設定する部分の失敗 (Win32Exception) は無視する
+        /// 事とします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void ClockTimer_Tick(object sender, EventArgs e)
+        [Test]
+        public void TestRun()
         {
             try
             {
-                var local  = DateTime.Now;
-                var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
-            }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// SyncButton_Click
-        /// 
-        /// <summary>
-        /// 時刻を同期する際に実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void SyncButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _observer.Refresh();
                 var sync = new CubeClock.Ntp.TimeSync();
-                sync.Run(_observer.LastResult);
-                _observer.Refresh();
+                sync.Run();
             }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+            catch (Win32Exception err) { Assert.Ignore(err.ToString()); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
 
-        #endregion
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunWithPacket
+        /// 
+        /// <summary>
+        /// NTP サーバから時刻を取得して同期するテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Windows Vista 以降、時刻の同期には管理者権限を必要とします。
+        /// そのため、時刻を設定する部分の失敗 (Win32Exception) は無視する
+        /// 事とします。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestRunWithPacket()
+        {
+            try
+            {
+                var client = new CubeClock.Ntp.Client();
+                var packet = client.Receive();
+                Assert.IsNotNull(packet);
+                Assert.IsTrue(packet.IsValid());
 
-        #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
-        #endregion
+                var sync = new CubeClock.Ntp.TimeSync();
+                sync.Run(packet);
+            }
+            catch (Win32Exception err) { Assert.Ignore(err.ToString()); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
+        }
     }
 }
