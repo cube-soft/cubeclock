@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="FixedPoint.cs" />
+    <Compile Include="Observer.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Timestamp.cs" />

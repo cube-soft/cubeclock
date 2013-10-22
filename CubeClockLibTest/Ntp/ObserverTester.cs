@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// MainForm.cs
+/// Ntp/ObserverTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,64 +26,45 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
-using System.Windows.Forms;
+using NUnit.Framework;
 
-namespace CubeClock.Ntp
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// MainForm
-    /// 
+    /// ObserverTester
+    ///
     /// <summary>
-    /// メイン画面を表示するためのクラスです。
+    /// Observer クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class MainForm : Form
+    [TestFixture]
+    public class ObserverTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm (constructor)
+        /// TestRefresh
         /// 
         /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
+        /// 少なくとも 1 回、NTP サーバから結果を取得するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public MainForm()
-        {
-            InitializeComponent();
-            ClockTimer.Start();
-        }
-
-        #region Event handlers
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ClockTimer_Tick
-        /// 
-        /// <summary>
-        /// 一定時間ごとに実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ClockTimer_Tick(object sender, EventArgs e)
+        [Test]
+        public void TestRefresh()
         {
             try
             {
-                var local  = DateTime.Now;
-                var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
+                var observer = new CubeClock.Ntp.Observer();
+                Assert.AreEqual(0, observer.LocalClockOffset.TotalMilliseconds);
+                observer.Refresh();
+                Assert.IsTrue(Math.Abs(observer.LocalClockOffset.TotalMilliseconds) > 0);
             }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+            catch (Exception err)
+            {
+                Assert.Fail(err.ToString());
+            }
         }
-
-        #endregion
-
-        #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
-        #endregion
     }
 }

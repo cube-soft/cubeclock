@@ -35,7 +35,7 @@ namespace CubeClockLibTest.Ntp
     /// ClientTester
     ///
     /// <summary>
-    /// NtpClient クラスのテストをするためのクラスです。
+    /// Client クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
