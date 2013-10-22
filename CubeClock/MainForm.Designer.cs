@@ -61,7 +61,7 @@
             // 
             this.LocalClockLabel.AutoSize = true;
             this.LocalClockLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LocalClockLabel.Location = new System.Drawing.Point(125, 9);
+            this.LocalClockLabel.Location = new System.Drawing.Point(135, 9);
             this.LocalClockLabel.Name = "LocalClockLabel";
             this.LocalClockLabel.Size = new System.Drawing.Size(147, 16);
             this.LocalClockLabel.TabIndex = 3;
@@ -71,7 +71,7 @@
             // 
             this.ServerClockLabel.AutoSize = true;
             this.ServerClockLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ServerClockLabel.Location = new System.Drawing.Point(125, 31);
+            this.ServerClockLabel.Location = new System.Drawing.Point(135, 31);
             this.ServerClockLabel.Name = "ServerClockLabel";
             this.ServerClockLabel.Size = new System.Drawing.Size(147, 16);
             this.ServerClockLabel.TabIndex = 4;
@@ -85,7 +85,7 @@
             // 
             this.SyncButton.Location = new System.Drawing.Point(12, 67);
             this.SyncButton.Name = "SyncButton";
-            this.SyncButton.Size = new System.Drawing.Size(260, 23);
+            this.SyncButton.Size = new System.Drawing.Size(270, 23);
             this.SyncButton.TabIndex = 5;
             this.SyncButton.Text = "時刻を同期する";
             this.SyncButton.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 102);
+            this.ClientSize = new System.Drawing.Size(294, 102);
             this.Controls.Add(this.SyncButton);
             this.Controls.Add(this.ServerClockLabel);
             this.Controls.Add(this.LocalClockLabel);
