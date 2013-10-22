@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// MainForm.cs
+/// Ntp/PacketTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,64 +26,52 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
-using System.Windows.Forms;
+using NUnit.Framework;
 
-namespace CubeClock.Ntp
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// MainForm
-    /// 
+    /// TimestampTester
+    ///
     /// <summary>
-    /// メイン画面を表示するためのクラスです。
+    /// Packet クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class MainForm : Form
+    [TestFixture]
+    public class PacketTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm (constructor)
+        /// TestCreatePacket
         /// 
         /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
+        /// 送信用の NTP パケットを生成するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public MainForm()
-        {
-            InitializeComponent();
-            ClockTimer.Start();
+        [Test]
+        public void TestCreatePacket() {
+            var packet = new CubeClock.Ntp.Packet();
+            Assert.IsTrue(packet.IsValid());
+            Assert.AreEqual(CubeClock.Ntp.LeapIndicator.NoWarning, packet.LeapIndicator);
+            Assert.AreEqual(3, packet.Version);
+            Assert.AreEqual(CubeClock.Ntp.Mode.Client, packet.Mode);
+            Assert.AreEqual(CubeClock.Ntp.Stratum.Unspecified, packet.Stratum);
+            Assert.AreEqual(0, packet.PollInterval);
+            Assert.AreEqual(1.0, packet.Precision);
+            Assert.AreEqual(0.0, packet.RootDelay);
+            Assert.AreEqual(0.0, packet.RootDispersion);
+            Assert.IsNullOrEmpty(packet.ReferenceID);
+            Assert.IsNullOrEmpty(packet.KeyID);
+            Assert.IsNullOrEmpty(packet.MessageDigest);
+            Assert.AreEqual(packet.CreationTime.Year,   packet.TransmitTimestamp.Year);
+            Assert.AreEqual(packet.CreationTime.Month,  packet.TransmitTimestamp.Month);
+            Assert.AreEqual(packet.CreationTime.Day,    packet.TransmitTimestamp.Day);
+            Assert.AreEqual(packet.CreationTime.Hour,   packet.TransmitTimestamp.Hour);
+            Assert.AreEqual(packet.CreationTime.Minute, packet.TransmitTimestamp.Minute);
+            Assert.AreEqual(packet.CreationTime.Second, packet.TransmitTimestamp.Second);
         }
-
-        #region Event handlers
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ClockTimer_Tick
-        /// 
-        /// <summary>
-        /// 一定時間ごとに実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ClockTimer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                var local  = DateTime.Now;
-                var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
-            }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
-        }
-
-        #endregion
-
-        #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
-        #endregion
     }
 }

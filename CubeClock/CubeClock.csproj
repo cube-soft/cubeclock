@@ -8,7 +8,7 @@
     <ProjectGuid>{4E4EB6DF-F2AC-4A00-92E6-082BF7CFDC25}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CubeClock</RootNamespace>
+    <RootNamespace>CubeClock.Ntp</RootNamespace>
     <AssemblyName>CubeClock</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -90,6 +90,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -112,9 +115,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CubeClockLib\CubeClockLib.csproj">
+    <ProjectReference Include="..\CubeClock.Ntp\CubeClock.Ntp.csproj">
       <Project>{AF5BE03A-AD35-4D0E-AE07-313F7D500D19}</Project>
-      <Name>CubeClockLib</Name>
+      <Name>CubeClock.Ntp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

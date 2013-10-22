@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// MainForm.cs
+/// Ntp/ClientTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,64 +26,47 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
-using System.Windows.Forms;
+using NUnit.Framework;
 
-namespace CubeClock.Ntp
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// MainForm
-    /// 
+    /// ClientTester
+    ///
     /// <summary>
-    /// メイン画面を表示するためのクラスです。
+    /// Client クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class MainForm : Form
+    [TestFixture]
+    public class ClientTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm (constructor)
+        /// TestReceive
         /// 
         /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
+        /// NTP サーバと通信するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public MainForm()
-        {
-            InitializeComponent();
-            ClockTimer.Start();
-        }
-
-        #region Event handlers
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ClockTimer_Tick
-        /// 
-        /// <summary>
-        /// 一定時間ごとに実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ClockTimer_Tick(object sender, EventArgs e)
+        [Test]
+        public void TestReceive()
         {
             try
             {
-                var local  = DateTime.Now;
-                var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
+                var server = "time.windows.com";
+                var client = new CubeClock.Ntp.Client(server);
+                Assert.IsNotNullOrEmpty(client.Host.HostName);
+                Assert.IsTrue(client.Host.AddressList.Length > 0);
+                Assert.AreEqual(123, client.Port);
+                Assert.AreEqual(2000, client.ReceiveTimeout);
+
+                // TODO: どんなアサーションを入れれば良いか…？
+                var packet = client.Receive();
             }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
-
-        #endregion
-
-        #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
-        #endregion
     }
 }

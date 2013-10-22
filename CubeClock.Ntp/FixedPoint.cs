@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// SntpClientTester.cs
+/// FixedPoint.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,21 +26,39 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using NUnit.Framework;
 
-namespace CubeClockLibTest
+namespace CubeClock.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// SntpClientTester
+    /// Timestamp
     ///
     /// <summary>
-    /// SntpClient クラスのテストをするためのクラスです。
+    /// 符号付き 32bit 固定小数点数から double への変換機能を提供するための
+    /// クラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    [TestFixture]
-    public class SntpClientTester
+    public abstract class FixedPoint
     {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToDouble
+        /// 
+        /// <summary>
+        /// 符号付き 32bit 固定小数点数から double へ変換します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static double ToDouble(Int32 value)
+        {
+            var number = (Int16)(value >> 16);
+            var fraction = (UInt16)(value & Int16.MaxValue);
+            return number + fraction / _CompensatingRate16;
+        }
+
+        #region Constant variables
+        private static readonly double _CompensatingRate16 = 0x10000d;
+        #endregion
     }
 }

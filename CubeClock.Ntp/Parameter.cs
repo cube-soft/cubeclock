@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// MainForm.cs
+/// Parameter.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,64 +26,59 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace CubeClock.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// MainForm
+    /// LeapIndicator
     /// 
     /// <summary>
-    /// メイン画面を表示するためのクラスです。
+    /// 閏秒指示子 (LI: Leap Indicator) の状態を定義した列挙型です。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class MainForm : Form
+    public enum LeapIndicator : uint
     {
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MainForm (constructor)
-        /// 
-        /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public MainForm()
-        {
-            InitializeComponent();
-            ClockTimer.Start();
-        }
+        NoWarning = 0,  // 0 - No warning
+        LastMinute61,   // 1 - Last minute has 61 seconds
+        LastMinute59,   // 2 - Last minute has 59 seconds
+        Alarm           // 3 - Alarm condition (clock not synchronized)
+    }
 
-        #region Event handlers
+    /* --------------------------------------------------------------------- */
+    ///
+    /// Mode
+    /// 
+    /// <summary>
+    /// 動作モードの状態を定義した列挙型です。
+    /// </summary>
+    ///
+    /* --------------------------------------------------------------------- */
+    public enum Mode : uint
+    {
+        Unknown = 0,        // 0, 6, 7 - Reserved
+        SymmetricActive,    // 1 - Symmetric active
+        SymmetricPassive,   // 2 - Symmetric pasive
+        Client,             // 3 - Client
+        Server,             // 4 - Server
+        Broadcast,          // 5 - Broadcast
+    }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ClockTimer_Tick
-        /// 
-        /// <summary>
-        /// 一定時間ごとに実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ClockTimer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                var local  = DateTime.Now;
-                var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
-            }
-            catch (Exception err) { Trace.WriteLine(err.ToString()); }
-        }
-
-        #endregion
-
-        #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
-        #endregion
+    /* --------------------------------------------------------------------- */
+    ///
+    /// Stratum
+    /// 
+    /// <summary>
+    /// 階層の状態を定義した列挙型です。
+    /// </summary>
+    ///
+    /* --------------------------------------------------------------------- */
+    public enum Stratum
+    {
+        Unspecified,            // 0 - unspecified or unavailable
+        PrimaryReference,       // 1 - primary reference (e.g. radio-clock)
+        SecondaryReference,     // 2-15 - secondary reference (via NTP or SNTP)
+        Reserved                // 16-255 - reserved
     }
 }

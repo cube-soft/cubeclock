@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// SntpClient.cs
+/// Ntp/ObserverTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,19 +26,45 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using NUnit.Framework;
 
-namespace CubeClock
+namespace CubeClockLibTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// SntpClient
+    /// ObserverTester
     ///
     /// <summary>
-    /// SNTP でサーバと通信するためのクラスです。
+    /// Observer クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public class SntpClient
+    [TestFixture]
+    public class ObserverTester
     {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRefresh
+        /// 
+        /// <summary>
+        /// 少なくとも 1 回、NTP サーバから結果を取得するテストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestRefresh()
+        {
+            try
+            {
+                var observer = new CubeClock.Ntp.Observer();
+                Assert.AreEqual(0, observer.LocalClockOffset.TotalMilliseconds);
+                observer.Refresh();
+                Assert.IsTrue(Math.Abs(observer.LocalClockOffset.TotalMilliseconds) > 0);
+            }
+            catch (Exception err)
+            {
+                Assert.Fail(err.ToString());
+            }
+        }
     }
 }
