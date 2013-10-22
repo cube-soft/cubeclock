@@ -101,6 +101,7 @@
             this.SyncNotifyIcon.BalloonTipTitle = "時刻の調整";
             this.SyncNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("SyncNotifyIcon.Icon")));
             this.SyncNotifyIcon.Text = "CubeClock";
+            this.SyncNotifyIcon.Visible = true;
             // 
             // AdWebBrowser
             // 
@@ -128,6 +129,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.ShowInTaskbar = false;
             this.Text = "CubeClock";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -99,10 +99,10 @@ namespace CubeClock.Ntp
         {
             try
             {
+                var sync = new CubeClock.Ntp.TimeSync(_observer.Client);
+                sync.Run();
                 _observer.Refresh();
-                var sync = new CubeClock.Ntp.TimeSync();
-                sync.Run(_observer.LastResult);
-                _observer.Refresh();
+                _notified = false;
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
@@ -125,16 +125,16 @@ namespace CubeClock.Ntp
             var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalSeconds);
             if (offset > _threshold)
             {
-                if (SyncNotifyIcon.Visible) return;
-                SyncNotifyIcon.Visible = true;
+                if (_notified) return;
                 var format = (_observer.LocalClockOffset.TotalMilliseconds <= 0) ?
                     Properties.Resources.TimeFastWarning : Properties.Resources.TimeBehindWarning;
                 var message = string.Format(format, offset);
                 SyncNotifyIcon.Text = message;
                 SyncNotifyIcon.BalloonTipText = message;
                 SyncNotifyIcon.ShowBalloonTip(30000);
+                _notified = true;
             }
-            else SyncNotifyIcon.Visible = false;
+            else SyncNotifyIcon.Text = "CubeClock";
         }
 
         #endregion
@@ -142,6 +142,7 @@ namespace CubeClock.Ntp
         #region Variables
         private Ntp.Observer _observer = new Ntp.Observer();
         private int _threshold = 5;
+        private bool _notified = false;
         #endregion
     }
 }
