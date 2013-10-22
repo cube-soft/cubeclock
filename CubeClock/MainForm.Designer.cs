@@ -36,6 +36,8 @@
             this.ServerClockLabel = new System.Windows.Forms.Label();
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
             this.SyncButton = new System.Windows.Forms.Button();
+            this.SyncNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.AdWebBrowser = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // label1
@@ -62,7 +64,7 @@
             // 
             this.LocalClockLabel.AutoSize = true;
             this.LocalClockLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LocalClockLabel.Location = new System.Drawing.Point(135, 9);
+            this.LocalClockLabel.Location = new System.Drawing.Point(141, 9);
             this.LocalClockLabel.Name = "LocalClockLabel";
             this.LocalClockLabel.Size = new System.Drawing.Size(147, 16);
             this.LocalClockLabel.TabIndex = 3;
@@ -72,7 +74,7 @@
             // 
             this.ServerClockLabel.AutoSize = true;
             this.ServerClockLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ServerClockLabel.Location = new System.Drawing.Point(135, 31);
+            this.ServerClockLabel.Location = new System.Drawing.Point(141, 31);
             this.ServerClockLabel.Name = "ServerClockLabel";
             this.ServerClockLabel.Size = new System.Drawing.Size(147, 16);
             this.ServerClockLabel.TabIndex = 4;
@@ -86,17 +88,37 @@
             // 
             this.SyncButton.Location = new System.Drawing.Point(12, 67);
             this.SyncButton.Name = "SyncButton";
-            this.SyncButton.Size = new System.Drawing.Size(270, 23);
+            this.SyncButton.Size = new System.Drawing.Size(276, 23);
             this.SyncButton.TabIndex = 5;
             this.SyncButton.Text = "時刻を同期する";
             this.SyncButton.UseVisualStyleBackColor = true;
             this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
             // 
+            // SyncNotifyIcon
+            // 
+            this.SyncNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.SyncNotifyIcon.BalloonTipText = "時刻の調整が必要です。";
+            this.SyncNotifyIcon.BalloonTipTitle = "時刻の調整";
+            this.SyncNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("SyncNotifyIcon.Icon")));
+            this.SyncNotifyIcon.Text = "CubeClock";
+            // 
+            // AdWebBrowser
+            // 
+            this.AdWebBrowser.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.AdWebBrowser.Location = new System.Drawing.Point(0, 112);
+            this.AdWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.AdWebBrowser.Name = "AdWebBrowser";
+            this.AdWebBrowser.ScrollBarsEnabled = false;
+            this.AdWebBrowser.Size = new System.Drawing.Size(300, 250);
+            this.AdWebBrowser.TabIndex = 6;
+            this.AdWebBrowser.Url = new System.Uri("", System.UriKind.Relative);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(294, 102);
+            this.ClientSize = new System.Drawing.Size(300, 362);
+            this.Controls.Add(this.AdWebBrowser);
             this.Controls.Add(this.SyncButton);
             this.Controls.Add(this.ServerClockLabel);
             this.Controls.Add(this.LocalClockLabel);
@@ -120,6 +142,8 @@
         private System.Windows.Forms.Label ServerClockLabel;
         private System.Windows.Forms.Timer ClockTimer;
         private System.Windows.Forms.Button SyncButton;
+        private System.Windows.Forms.NotifyIcon SyncNotifyIcon;
+        private System.Windows.Forms.WebBrowser AdWebBrowser;
 
     }
 }

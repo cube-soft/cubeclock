@@ -59,5 +59,32 @@ namespace CubeClock.Ntp.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   http://sogap.cielquis.net/common/adtest.html に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AdUrl {
+            get {
+                return ResourceManager.GetString("AdUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   時刻が {0} 秒遅れています。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string TimeBehindWarning {
+            get {
+                return ResourceManager.GetString("TimeBehindWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   時刻が {0} 秒進んでいます。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string TimeFastWarning {
+            get {
+                return ResourceManager.GetString("TimeFastWarning", resourceCulture);
+            }
+        }
     }
 }
