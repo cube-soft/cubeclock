@@ -42,6 +42,8 @@ namespace CubeClock.Ntp
     /* --------------------------------------------------------------------- */
     public partial class MainForm : Form
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
         ///
         /// MainForm (constructor)
@@ -56,6 +58,8 @@ namespace CubeClock.Ntp
             InitializeComponent();
             ClockTimer.Start();
         }
+
+        #endregion
 
         #region Event handlers
 
@@ -76,6 +80,7 @@ namespace CubeClock.Ntp
                 var server = local + _observer.LocalClockOffset;
                 LocalClockLabel.Text  = local.ToString();
                 ServerClockLabel.Text = server.ToString();
+                UpdateNotifyIcon();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
@@ -103,8 +108,39 @@ namespace CubeClock.Ntp
 
         #endregion
 
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpdateNotifyIcon
+        /// 
+        /// <summary>
+        /// タスクトレイ上のアイコンの表示状態を更新します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void UpdateNotifyIcon()
+        {
+            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalSeconds);
+            if (offset > _threshold)
+            {
+                if (SyncNotifyIcon.Visible) return;
+                SyncNotifyIcon.Visible = true;
+                var format = (_observer.LocalClockOffset.TotalMilliseconds <= 0) ?
+                    Properties.Resources.TimeFastWarning : Properties.Resources.TimeBehindWarning;
+                var message = string.Format(format, offset);
+                SyncNotifyIcon.Text = message;
+                SyncNotifyIcon.BalloonTipText = message;
+                SyncNotifyIcon.ShowBalloonTip(30000);
+            }
+            else SyncNotifyIcon.Visible = false;
+        }
+
+        #endregion
+
         #region Variables
         private Ntp.Observer _observer = new Ntp.Observer();
+        private int _threshold = 5;
         #endregion
     }
 }

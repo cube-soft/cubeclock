@@ -36,6 +36,7 @@
             this.ServerClockLabel = new System.Windows.Forms.Label();
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
             this.SyncButton = new System.Windows.Forms.Button();
+            this.SyncNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -92,6 +93,14 @@
             this.SyncButton.UseVisualStyleBackColor = true;
             this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
             // 
+            // SyncNotifyIcon
+            // 
+            this.SyncNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.SyncNotifyIcon.BalloonTipText = "時刻の調整が必要です。";
+            this.SyncNotifyIcon.BalloonTipTitle = "時刻の調整";
+            this.SyncNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("SyncNotifyIcon.Icon")));
+            this.SyncNotifyIcon.Text = "CubeClock";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -120,6 +129,7 @@
         private System.Windows.Forms.Label ServerClockLabel;
         private System.Windows.Forms.Timer ClockTimer;
         private System.Windows.Forms.Button SyncButton;
+        private System.Windows.Forms.NotifyIcon SyncNotifyIcon;
 
     }
 }
