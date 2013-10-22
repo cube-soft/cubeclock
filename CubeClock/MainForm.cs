@@ -57,6 +57,7 @@ namespace CubeClock.Ntp
         {
             InitializeComponent();
             ClockTimer.Start();
+            AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
         }
 
         #endregion
