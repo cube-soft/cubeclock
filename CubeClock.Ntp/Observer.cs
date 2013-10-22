@@ -50,14 +50,14 @@ namespace CubeClock.Ntp
         /// Observer (constructor)
         /// 
         /// <summary>
-        /// 引数に指定されたホスト名、または IP アドレスを用いてオブジェクト
-        /// を初期化します。
+        /// 引数に指定された NTP クライアントを用いてオブジェクトを初期化
+        /// します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Observer(string host_or_ipaddr, int port = 123)
+        public Observer(Ntp.Client client)
         {
-            _client = new Ntp.Client(host_or_ipaddr, port);
+            _client = client;
             _worker = new BackgroundWorker();
             _worker.WorkerSupportsCancellation = true;
             _worker.DoWork += new DoWorkEventHandler(OnDoWork);
@@ -68,11 +68,24 @@ namespace CubeClock.Ntp
         /// Observer (constructor)
         /// 
         /// <summary>
+        /// 引数に指定されたホスト名、または IP アドレスを用いてオブジェクト
+        /// を初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Observer(string host_or_ipaddr, int port = 123)
+            : this(new Ntp.Client(host_or_ipaddr, port)) { }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Observer (constructor)
+        /// 
+        /// <summary>
         /// 既定の値でオブジェクトを初期化します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Observer() : this("time.windows.com") { }
+        public Observer() : this(new Ntp.Client()) { }
 
         #endregion
 
@@ -112,6 +125,34 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
+        /// Client
+        /// 
+        /// <summary>
+        /// NTP サーバと通信しているクライアントオブジェクトを取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Ntp.Client Client
+        {
+            get { return _client; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LastResult
+        /// 
+        /// <summary>
+        /// NTP サーバとの最新の通信結果を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Ntp.Packet LastResult
+        {
+            get { return _last; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// LocalClockOffset
         /// 
         /// <summary>
@@ -132,9 +173,9 @@ namespace CubeClock.Ntp
             {
                 lock (_lock)
                 {
-                    var refresh = (_latest == null || (DateTime.Now - _latest.CreationTime).TotalMilliseconds > _ttl);
+                    var refresh = (_last == null || (DateTime.Now - _last.CreationTime).TotalMilliseconds > _ttl);
                     if (refresh && !_worker.IsBusy) _worker.RunWorkerAsync();
-                    return (_latest != null) ? _latest.LocalClockOffset : new TimeSpan(0);
+                    return (_last != null) ? _last.LocalClockOffset : new TimeSpan(0);
                 }
             }
         }
@@ -164,7 +205,7 @@ namespace CubeClock.Ntp
             lock (_lock)
             {
                 var packet = _client.Receive();
-                if (packet != null && packet.IsValid()) _latest = packet;
+                if (packet != null && packet.IsValid()) _last = packet;
             }
         }
 
@@ -180,7 +221,7 @@ namespace CubeClock.Ntp
         public void Reset(string host_or_ipaddr, int port = 123)
         {
             var preserve = _client;
-            var latest = _latest;
+            var latest = _last;
             try
             {
                 if (_worker.IsBusy)
@@ -195,7 +236,7 @@ namespace CubeClock.Ntp
             catch (Exception err)
             {
                 _client = preserve;
-                _latest = latest;
+                _last = latest;
                 Trace.WriteLine(err.ToString());
             }
         }
@@ -223,7 +264,7 @@ namespace CubeClock.Ntp
 
         #region Variables
         private Ntp.Client _client = null;
-        private Ntp.Packet _latest = null;
+        private Ntp.Packet _last = null;
         private int _ttl = 30 * 60 * 1000;
         private BackgroundWorker _worker = null;
         private object _lock = new object();

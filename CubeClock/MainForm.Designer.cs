@@ -34,6 +34,7 @@
             this.LocalClockLabel = new System.Windows.Forms.Label();
             this.ServerClockLabel = new System.Windows.Forms.Label();
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
+            this.SyncButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -80,15 +81,28 @@
             // 
             this.ClockTimer.Tick += new System.EventHandler(this.ClockTimer_Tick);
             // 
+            // SyncButton
+            // 
+            this.SyncButton.Location = new System.Drawing.Point(12, 67);
+            this.SyncButton.Name = "SyncButton";
+            this.SyncButton.Size = new System.Drawing.Size(260, 23);
+            this.SyncButton.TabIndex = 5;
+            this.SyncButton.Text = "時刻を同期する";
+            this.SyncButton.UseVisualStyleBackColor = true;
+            this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 62);
+            this.ClientSize = new System.Drawing.Size(284, 102);
+            this.Controls.Add(this.SyncButton);
             this.Controls.Add(this.ServerClockLabel);
             this.Controls.Add(this.LocalClockLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "CubeClock";
             this.ResumeLayout(false);
@@ -103,6 +117,7 @@
         private System.Windows.Forms.Label LocalClockLabel;
         private System.Windows.Forms.Label ServerClockLabel;
         private System.Windows.Forms.Timer ClockTimer;
+        private System.Windows.Forms.Button SyncButton;
 
     }
 }

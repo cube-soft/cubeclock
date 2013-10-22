@@ -73,19 +73,14 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
-        /// Receive
+        /// Client (constructor)
         /// 
         /// <summary>
-        /// NTP サーバと通信を行い、NTP パケットを取得します。
+        /// 既定の値でオブジェクトを初期化します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Packet Receive()
-        {
-            var socket = CreateSocket();
-            SendTo(socket);
-            return ReceiveFrom(socket);
-        }
+        public Client() : this("time.windows.com") { }
 
         #endregion
 
@@ -133,6 +128,26 @@ namespace CubeClock.Ntp
         {
             get { return _timeout; }
             set { _timeout = value; }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Receive
+        /// 
+        /// <summary>
+        /// NTP サーバと通信を行い、NTP パケットを取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Packet Receive()
+        {
+            var socket = CreateSocket();
+            SendTo(socket);
+            return ReceiveFrom(socket);
         }
 
         #endregion

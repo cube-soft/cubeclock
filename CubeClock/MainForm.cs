@@ -80,6 +80,27 @@ namespace CubeClock.Ntp
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SyncButton_Click
+        /// 
+        /// <summary>
+        /// 時刻を同期する際に実行されるイベントハンドラです。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SyncButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _observer.Refresh();
+                var sync = new CubeClock.Ntp.TimeSync();
+                sync.Run(_observer.LastResult);
+                _observer.Refresh();
+            }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
         #endregion
 
         #region Variables
