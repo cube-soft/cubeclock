@@ -1,4 +1,4 @@
-﻿namespace CubeClock
+﻿namespace CubeClockObserver
 {
     partial class MainForm
     {

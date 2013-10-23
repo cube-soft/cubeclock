@@ -29,7 +29,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace CubeClock
+namespace CubeClockObserver
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -84,6 +84,9 @@ namespace CubeClock
             try
             {
                 var local  = DateTime.Now;
+                if (Math.Abs((local - _last).TotalSeconds) > 3.0) _observer.Reset();
+                _last = local;
+
                 var server = local + _observer.LocalClockOffset;
                 LocalClockLabel.Text  = local.ToString();
                 ServerClockLabel.Text = server.ToString();
@@ -105,7 +108,17 @@ namespace CubeClock
         {
             try
             {
-                _observer.Synchronize();
+                var info   = new System.Diagnostics.ProcessStartInfo();
+                var dir    = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var exec   = System.IO.Path.Combine(dir, "CubeClockAdjuster.exe");
+                var offset = (int)_observer.LocalClockOffset.TotalMilliseconds;
+                info.FileName = exec;
+                info.Arguments = offset.ToString();
+
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = info;
+                process.Start();
+
                 _notified = false;
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
@@ -248,10 +261,11 @@ namespace CubeClock
         #endregion
 
         #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
+        private CubeClock.Ntp.Observer _observer = new CubeClock.Ntp.Observer();
         private int _threshold = 5;
         private bool _notified = false;
         private bool _exit = false;
+        private DateTime _last = DateTime.Now;
         #endregion
     }
 }

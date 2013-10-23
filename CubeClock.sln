@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubeClock", "CubeClock\Cube
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubeClockTest", "CubeClockTest\CubeClockTest.csproj", "{8BA71313-DF9B-45A2-A64B-64D7E17009A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubeClockAdjuster", "CubeClockAdjuster\CubeClockAdjuster.csproj", "{28C9C952-B102-409B-8C0E-9F236375D696}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,18 @@ Global
 		{8BA71313-DF9B-45A2-A64B-64D7E17009A4}.Release|x64.Build.0 = Release|x64
 		{8BA71313-DF9B-45A2-A64B-64D7E17009A4}.Release|x86.ActiveCfg = Release|x86
 		{8BA71313-DF9B-45A2-A64B-64D7E17009A4}.Release|x86.Build.0 = Release|x86
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|x64.ActiveCfg = Debug|x64
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|x64.Build.0 = Debug|x64
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|x86.ActiveCfg = Debug|x86
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Debug|x86.Build.0 = Debug|x86
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|x64.ActiveCfg = Release|x64
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|x64.Build.0 = Release|x64
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|x86.ActiveCfg = Release|x86
+		{28C9C952-B102-409B-8C0E-9F236375D696}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

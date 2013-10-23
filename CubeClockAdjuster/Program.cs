@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// Program.cs
+/// MainForm.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,11 +26,11 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Windows.Forms;
+using System.Diagnostics;
 
-namespace CubeClockObserver
+namespace CubeClockAdjuster
 {
-    static class Program
+    class Program
     {
         /* ----------------------------------------------------------------- */
         ///
@@ -41,12 +41,15 @@ namespace CubeClockObserver
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            if (args.Length < 1) return;
+            try
+            {
+                var msec = int.Parse(args[0]);
+                CubeClock.SystemClock.Adjust(DateTime.Now.AddMilliseconds(msec));
+            }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
     }
 }
