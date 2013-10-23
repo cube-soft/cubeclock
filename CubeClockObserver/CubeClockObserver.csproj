@@ -8,7 +8,7 @@
     <ProjectGuid>{4E4EB6DF-F2AC-4A00-92E6-082BF7CFDC25}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CubeClock</RootNamespace>
+    <RootNamespace>CubeClockObserver</RootNamespace>
     <AssemblyName>CubeClockObserver</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>

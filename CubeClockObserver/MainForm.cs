@@ -29,7 +29,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace CubeClock
+namespace CubeClockObserver
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -261,7 +261,7 @@ namespace CubeClock
         #endregion
 
         #region Variables
-        private Ntp.Observer _observer = new Ntp.Observer();
+        private CubeClock.Ntp.Observer _observer = new CubeClock.Ntp.Observer();
         private int _threshold = 5;
         private bool _notified = false;
         private bool _exit = false;

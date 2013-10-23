@@ -28,7 +28,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace CubeClock
+namespace CubeClockObserver
 {
     static class Program
     {
