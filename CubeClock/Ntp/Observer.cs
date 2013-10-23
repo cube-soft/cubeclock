@@ -276,18 +276,28 @@ namespace CubeClock.Ntp
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public void Reset(string host_or_ipaddr, int port = 123) { Reset(new Ntp.Client(host_or_ipaddr, port)); }
+        public void Reset(string host_or_ipaddr, int port = 123)
+        {
+            var client = new Ntp.Client(host_or_ipaddr, port);
+            Reset(client);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Reset
+        /// 
+        /// <summary>
+        /// 通信を行う NTP サーバを変更します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
         public void Reset(Ntp.Client client)
         {
             CancelBackgroundWorker();
-            client.ReceiveTimeout = _client.ReceiveTimeout;
-            var packet = client.Receive();
-            if (packet == null || !packet.IsValid) return;
-
             lock (_lock)
             {
                 _client = client;
-                _last   = packet;
+                _last   = null;
                 _failed = 0;
             }
         }
@@ -324,7 +334,7 @@ namespace CubeClock.Ntp
         {
             lock (_lock)
             {
-                if (!IsValid) Refresh();
+                if (!IsValid) Refresh(3, new TimeSpan(0, 0, 5));
                 CubeClock.SystemClock.Adjust(LocalClockOffset);
                 _last = null;
             }
