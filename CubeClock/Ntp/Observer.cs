@@ -210,9 +210,10 @@ namespace CubeClock.Ntp
         /// Refresh
         /// 
         /// <summary>
-        /// NTP サーバとの通信結果を更新します。
+        /// NTP サーバとの通信結果を更新します。結果の取得に失敗した場合、
+        /// 最大で max_retry 回、interval 秒毎に再試行します。
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// 通常、TTL の値に基づいてバックグラウンドで定期的に通信を行って
         /// いますが、ユーザが能動的に結果を更新する必要がある場合は
@@ -220,15 +221,39 @@ namespace CubeClock.Ntp
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public void Refresh()
+        public void Refresh(int max_retry, TimeSpan interval)
         {
             if (_client == null) return;
-            lock (_lock)
+            try
             {
-                var packet = _client.Receive();
-                if (packet != null && packet.IsValid) _last = packet;
+                lock (_lock)
+                {
+                    var packet = _client.Receive();
+                    if (packet != null && packet.IsValid) _last = packet;
+                }
+            }
+            catch (Exception err)
+            {
+                Trace.WriteLine(err.ToString());
+                if (max_retry > 0)
+                {
+                    System.Threading.Thread.Sleep(interval);
+                    Refresh(max_retry - 1, interval);
+                }
             }
         }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Refresh
+        /// 
+        /// <summary>
+        /// NTP サーバとの通信結果を更新します。更新に失敗した場合、再試行は
+        /// 行なわれません。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void Refresh() { Refresh(0, new TimeSpan(0)); }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -254,9 +279,9 @@ namespace CubeClock.Ntp
             }
             catch (Exception err)
             {
+                Trace.WriteLine(err.ToString());
                 _client = preserve;
                 _last = last;
-                Trace.WriteLine(err.ToString());
             }
         }
 
@@ -295,7 +320,7 @@ namespace CubeClock.Ntp
         private void OnDoWork(object sender, DoWorkEventArgs e)
         {
             if (e.Cancel) return;
-            Refresh();
+            Refresh(3, new TimeSpan(0, 0, 5));
         }
 
         #endregion
