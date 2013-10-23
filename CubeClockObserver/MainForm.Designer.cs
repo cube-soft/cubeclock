@@ -87,11 +87,13 @@
             // 
             // SyncButton
             // 
+            this.SyncButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SyncButton.Location = new System.Drawing.Point(12, 67);
             this.SyncButton.Name = "SyncButton";
-            this.SyncButton.Size = new System.Drawing.Size(276, 23);
+            this.SyncButton.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
+            this.SyncButton.Size = new System.Drawing.Size(276, 28);
             this.SyncButton.TabIndex = 5;
-            this.SyncButton.Text = "時刻を同期する";
+            this.SyncButton.Text = "時刻を同期する...";
             this.SyncButton.UseVisualStyleBackColor = true;
             this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
             // 

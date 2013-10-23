@@ -27,6 +27,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace CubeClockObserver
@@ -56,10 +57,12 @@ namespace CubeClockObserver
         public MainForm()
         {
             InitializeComponent();
-            
+
+            var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
+            SyncButton.Image = shield.ToBitmap();
+            SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
             LocalClockLabel.Text = DateTime.Now.ToString();
             ServerClockLabel.Text = LocalClockLabel.Text;
-            SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
             AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
             AdWebBrowser.Document.Click += new HtmlElementEventHandler(Document_Click);
 
