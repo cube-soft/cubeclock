@@ -61,6 +61,7 @@ namespace CubeClock
             ServerClockLabel.Text = LocalClockLabel.Text;
             SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
             AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
+            AdWebBrowser.Document.Click += new HtmlElementEventHandler(Document_Click);
 
             ClockTimer.Start();
         }
@@ -150,6 +151,35 @@ namespace CubeClock
             Show();
             WindowState = FormWindowState.Normal;
             Activate();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Document_Click
+        /// 
+        /// <summary>
+        /// Web ブラウザ領域がクリックされた時に実行されるイベントハンドラ
+        /// です。リンク先に移動する際、既定のブラウザを使用します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void Document_Click(object sender, HtmlElementEventArgs e)
+        {
+            var element = AdWebBrowser.Document.GetElementFromPoint(e.MousePosition);
+            while (element != null)
+            {
+                if (element.TagName.ToLower() == "a")
+                {
+                    e.ReturnValue = false;
+                    var link = element.GetAttribute("href");
+                    if (string.IsNullOrEmpty(link)) return;
+
+                    try { System.Diagnostics.Process.Start(link); }
+                    catch (Exception err) { Trace.WriteLine(err.ToString()); }
+                    return;
+                }
+                element = element.Parent;
+            }
         }
 
         #endregion
