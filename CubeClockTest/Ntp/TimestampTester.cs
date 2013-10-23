@@ -44,6 +44,60 @@ namespace CubeClockTest.Ntp
     {
         /* ----------------------------------------------------------------- */
         ///
+        /// TestTimestampToDateTime
+        /// 
+        /// <summary>
+        /// NTP タイムスタンプを DateTime オブジェクトに変更するテストを
+        /// 行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestTimestampToDateTime()
+        {
+            var timestamp = -0x100000000L;
+            var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
+            Assert.AreEqual(2036, converted.Year);
+            Assert.AreEqual(2, converted.Month);
+            Assert.AreEqual(7, converted.Day);
+            Assert.AreEqual(6, converted.Hour);
+            Assert.AreEqual(28, converted.Minute);
+            Assert.AreEqual(15, converted.Second);
+
+            timestamp = 0;
+            converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
+            Assert.AreEqual(2036, converted.Year);
+            Assert.AreEqual(2,    converted.Month);
+            Assert.AreEqual(7,    converted.Day);
+            Assert.AreEqual(6,    converted.Hour);
+            Assert.AreEqual(28,   converted.Minute);
+            Assert.AreEqual(16,   converted.Second);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestDateTimeToTimestamp
+        /// 
+        /// <summary>
+        /// DateTime オブジェクトを NTP タイムスタンプに変更するテストを
+        /// 行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestDateTimeToTimestamp()
+        {
+            var datetime  = new DateTime(2036, 2, 7, 6, 28, 15, 0, DateTimeKind.Utc);
+            var converted = CubeClock.Ntp.Timestamp.ToTimestamp(datetime);
+            Assert.AreEqual(-0x100000000L, converted);
+
+            datetime = new DateTime(2036, 2, 7, 6, 28, 16, 0, DateTimeKind.Utc);
+            converted = CubeClock.Ntp.Timestamp.ToTimestamp(datetime);
+            Assert.AreEqual(0, converted);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// TestConvert
         /// 
         /// <summary>
