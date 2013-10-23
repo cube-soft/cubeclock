@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// Ntp/TimestampTester.cs
+/// Ntp/ClientTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -28,71 +28,65 @@
 using System;
 using NUnit.Framework;
 
-namespace CubeClockLibTest.Ntp
+namespace CubeClockTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// TimestampTester
+    /// ClientTester
     ///
     /// <summary>
-    /// Timestamp クラスのテストをするためのクラスです。
+    /// Client クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class TimestampTester
+    public class ClientTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvert
+        /// TestReceive
         /// 
         /// <summary>
-        /// 現在時刻をいったん NTP タイムスタンプに変換し、再度 DateTime
-        /// オブジェクトに変換するテストを行います。
+        /// NTP サーバと通信するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvert()
+        public void TestReceive()
         {
-            var now = DateTime.Now;
-            var timestamp = CubeClock.Ntp.Timestamp.ToTimestamp(now);
-            var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
-            Assert.AreEqual(now.Year,   converted.Year);
-            Assert.AreEqual(now.Month,  converted.Month);
-            Assert.AreEqual(now.Day,    converted.Day);
-            Assert.AreEqual(now.Hour,   converted.Hour);
-            Assert.AreEqual(now.Minute, converted.Minute);
-            Assert.AreEqual(now.Second, converted.Second);
+            try
+            {
+                var client = new CubeClock.Ntp.Client();
+                Assert.IsNotNullOrEmpty(client.Host.HostName);
+                Assert.IsTrue(client.Host.AddressList.Length > 0);
+                Assert.AreEqual(123, client.Port);
+                Assert.AreEqual(5000, client.ReceiveTimeout);
+
+                var packet = client.Receive();
+                Assert.IsNotNull(packet);
+                Assert.IsTrue(packet.IsValid);
+            }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertDetail
+        /// TestServerNotFound
         /// 
         /// <summary>
-        /// 引数に指定された日時をいったん NTP タイムスタンプに変換し、
-        /// 再度 DateTime オブジェクトに変換するテストを行います。
+        /// NTP サーバとして、存在しないホスト名を指定した時のテストを
+        /// 行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(1970,  1,  1,  0,  0,  0)]
-        [TestCase(1999, 12, 31, 23, 59, 59)]
-        [TestCase(2000,  1,  1,  0,  0,  0)]
-        [TestCase(2036,  2,  7,  6, 28, 15)]
-        [TestCase(2036,  2,  7,  6, 28, 16)]
-        [TestCase(2104,  1,  1,  0,  0,  0)]
-        public void TestConvertDetail(int year, int month, int day, int hour, int minute, int second)
+        [Test]
+        public void TestServerNotFound()
         {
-            var datetime = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
-            var timestamp = CubeClock.Ntp.Timestamp.ToTimestamp(datetime);
-            var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
-            Assert.AreEqual(year,   converted.Year);
-            Assert.AreEqual(month,  converted.Month);
-            Assert.AreEqual(day,    converted.Day);
-            Assert.AreEqual(hour,   converted.Hour);
-            Assert.AreEqual(minute, converted.Minute);
-            Assert.AreEqual(second, converted.Second);
+            try {
+                var client = new CubeClock.Ntp.Client("404.not.found.com");
+                Assert.Fail("never reached");
+            }
+            catch (Exception err) { Assert.Pass(err.ToString()); }
         }
     }
 }

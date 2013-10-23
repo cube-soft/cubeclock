@@ -84,6 +84,11 @@ namespace CubeClock.Ntp
         /* ----------------------------------------------------------------- */
         public Packet(byte[] rawdata)
         {
+            if (rawdata.Length < _MinimumPacketSize)
+            {
+                var message = string.Format("data size should be more than {0} bytes", _MinimumPacketSize);
+                throw new ArgumentException(message);
+            }
             _raw = rawdata;
         }
 
@@ -392,6 +397,20 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
+        /// IsValid
+        /// 
+        /// <summary>
+        /// NTP パケットとして有効なものであるかどうか表す値を判別します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool IsValid
+        {
+            get { return (_raw != null &&  LeapIndicator != Ntp.LeapIndicator.Alarm); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// RawData
         /// 
         /// <summary>
@@ -482,24 +501,6 @@ namespace CubeClock.Ntp
 
         #endregion
 
-        #region Public methods
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// IsValid
-        /// 
-        /// <summary>
-        /// NTP パケットとして有効なものであるかどうかを判別します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public bool IsValid()
-        {
-            return (_raw != null & _raw.Length >= 48);
-        }
-
-        #endregion
-
         #region Other methods
 
         /* ----------------------------------------------------------------- */
@@ -513,7 +514,7 @@ namespace CubeClock.Ntp
         /* ----------------------------------------------------------------- */
         private byte[] CreateNewPacket()
         {
-            var dest = new byte[48];
+            var dest = new byte[_MinimumPacketSize];
             dest[0] = (byte)(_ClientLeapIndicator | _ClientVersion << 3 | _ClientMode);
 
             var timestamp = Timestamp.ToTimestamp(CreationTime.ToUniversalTime());
@@ -565,6 +566,7 @@ namespace CubeClock.Ntp
         private static readonly byte _ClientLeapIndicator = 0x00;
         private static readonly byte _ClientMode = 0x03;
         private static readonly int  _ClientVersion = 3;
+        private static readonly int  _MinimumPacketSize = 48;
         #endregion
     }
 }

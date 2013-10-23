@@ -28,7 +28,7 @@
 using System;
 using NUnit.Framework;
 
-namespace CubeClockLibTest.Ntp
+namespace CubeClockTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -54,7 +54,7 @@ namespace CubeClockLibTest.Ntp
         [Test]
         public void TestCreatePacket() {
             var packet = new CubeClock.Ntp.Packet();
-            Assert.IsTrue(packet.IsValid());
+            Assert.IsTrue(packet.IsValid);
             Assert.AreEqual(CubeClock.Ntp.LeapIndicator.NoWarning, packet.LeapIndicator);
             Assert.AreEqual(3, packet.Version);
             Assert.AreEqual(CubeClock.Ntp.Mode.Client, packet.Mode);
@@ -72,6 +72,28 @@ namespace CubeClockLibTest.Ntp
             Assert.AreEqual(packet.CreationTime.Hour,   packet.TransmitTimestamp.Hour);
             Assert.AreEqual(packet.CreationTime.Minute, packet.TransmitTimestamp.Minute);
             Assert.AreEqual(packet.CreationTime.Second, packet.TransmitTimestamp.Second);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestCreatePacketWithInvalidData
+        /// 
+        /// <summary>
+        /// 不正なデータで Packet クラスを初期化しようとするテストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestCreatePacketWithInvalidData()
+        {
+            try
+            {
+                var invalid = new byte[47];
+                var packet = new CubeClock.Ntp.Packet(invalid);
+                Assert.Fail("nerver reached");
+            }
+            catch (ArgumentException err) { Assert.Pass(err.ToString()); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
     }
 }

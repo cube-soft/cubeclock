@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// Ntp/ObserverTester.cs
+/// Program.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -26,45 +26,27 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using NUnit.Framework;
+using System.Windows.Forms;
 
-namespace CubeClockLibTest.Ntp
+namespace CubeClock
 {
-    /* --------------------------------------------------------------------- */
-    ///
-    /// ObserverTester
-    ///
-    /// <summary>
-    /// Observer クラスのテストをするためのクラスです。
-    /// </summary>
-    ///
-    /* --------------------------------------------------------------------- */
-    [TestFixture]
-    public class ObserverTester
+    static class Program
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRefresh
+        /// Main
         /// 
         /// <summary>
-        /// 少なくとも 1 回、NTP サーバから結果を取得するテストを行います。
+        /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
-        ///
+        /// 
         /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestRefresh()
+        [STAThread]
+        static void Main()
         {
-            try
-            {
-                var observer = new CubeClock.Ntp.Observer();
-                Assert.AreEqual(0, observer.LocalClockOffset.TotalMilliseconds);
-                observer.Refresh();
-                Assert.IsTrue(Math.Abs(observer.LocalClockOffset.TotalMilliseconds) > 0);
-            }
-            catch (Exception err)
-            {
-                Assert.Fail(err.ToString());
-            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainForm());
         }
     }
 }

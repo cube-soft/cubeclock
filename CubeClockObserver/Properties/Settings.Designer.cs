@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CubeClock.Ntp.Properties {
+namespace CubeClock.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

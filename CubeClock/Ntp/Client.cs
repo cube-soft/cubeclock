@@ -199,7 +199,6 @@ namespace CubeClock.Ntp
             byte[] raw = new byte[48 + (32 + 128) / 8];
             EndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
             var bytes = socket.ReceiveFrom(raw, ref endpoint);
-            if (bytes < 48) throw new ArgumentException("too few packet");
             return new Ntp.Packet(raw);
         }
 
@@ -208,7 +207,7 @@ namespace CubeClock.Ntp
         #region Variables
         private IPHostEntry _host = null;
         private IPEndPoint _endpoint = null;
-        private int _timeout = 2000;
+        private int _timeout = 5000;
         #endregion
     }
 }
