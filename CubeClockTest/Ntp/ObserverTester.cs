@@ -69,7 +69,7 @@ namespace CubeClockTest.Ntp
                 Assert.AreEqual(0, observer.FailedCount);
                 Assert.IsTrue(Math.Abs(observer.LocalClockOffset.TotalMilliseconds) > 0);
 
-                observer.Clear();
+                observer.Reset();
                 Assert.IsNull(observer.LastResult);
                 Assert.IsFalse(observer.IsValid);
                 Assert.AreEqual(0, observer.FailedCount);

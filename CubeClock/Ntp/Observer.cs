@@ -277,6 +277,7 @@ namespace CubeClock.Ntp
         public void Reset(string host_or_ipaddr, int port = 123)
         {
             var client = new Ntp.Client(host_or_ipaddr, port);
+            client.ReceiveTimeout = _client.ReceiveTimeout;
             Reset(client);
         }
 
@@ -291,25 +292,20 @@ namespace CubeClock.Ntp
         /* ----------------------------------------------------------------- */
         public void Reset(Ntp.Client client)
         {
-            CancelBackgroundWorker();
-            lock (_lock)
-            {
-                _client = client;
-                _last   = null;
-                _failed = 0;
-            }
+            lock (_lock) _client = client;
+            Reset();
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// Clear
+        /// Reset
         /// 
         /// <summary>
         /// 取得している更新結果等を破棄します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void Clear()
+        public void Reset()
         {
             CancelBackgroundWorker();
             lock (_lock)
