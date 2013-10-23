@@ -60,13 +60,33 @@ namespace CubeClockTest.Ntp
                 Assert.IsNotNullOrEmpty(client.Host.HostName);
                 Assert.IsTrue(client.Host.AddressList.Length > 0);
                 Assert.AreEqual(123, client.Port);
-                Assert.AreEqual(2000, client.ReceiveTimeout);
+                Assert.AreEqual(5000, client.ReceiveTimeout);
 
                 var packet = client.Receive();
                 Assert.IsNotNull(packet);
                 Assert.IsTrue(packet.IsValid);
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestServerNotFound
+        /// 
+        /// <summary>
+        /// NTP サーバとして、存在しないホスト名を指定した時のテストを
+        /// 行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestServerNotFound()
+        {
+            try {
+                var client = new CubeClock.Ntp.Client("404.not.found.com");
+                Assert.Fail("never reached");
+            }
+            catch (Exception err) { Assert.Pass(err.ToString()); }
         }
     }
 }

@@ -207,7 +207,7 @@ namespace CubeClock.Ntp
         #region Variables
         private IPHostEntry _host = null;
         private IPEndPoint _endpoint = null;
-        private int _timeout = 2000;
+        private int _timeout = 5000;
         #endregion
     }
 }

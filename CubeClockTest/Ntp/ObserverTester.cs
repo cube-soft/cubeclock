@@ -75,7 +75,7 @@ namespace CubeClockTest.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRefresh
+        /// TestReset
         /// 
         /// <summary>
         /// 途中で NTP サーバを変更するテストを行います。
@@ -98,6 +98,38 @@ namespace CubeClockTest.Ntp
                 Assert.AreEqual(0, observer.FailedCount);
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestReset
+        /// 
+        /// <summary>
+        /// 存在しない NTP サーバに変更するテストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestResetWithNoExistServer()
+        {
+            var observer = new CubeClock.Ntp.Observer();
+            var previous = observer.Client;
+            Assert.IsNotNull(previous);
+
+            try
+            {
+                observer.Refresh();
+                observer.Client.ReceiveTimeout = 100;
+                Assert.IsTrue(observer.IsValid);
+                observer.Reset("404.not.found.com");
+                Assert.Fail("never reached");
+            }
+            catch (Exception err)
+            {
+                Assert.Pass(err.ToString());
+                Assert.AreEqual(previous, observer.Client);
+                Assert.IsTrue(observer.IsValid);
+            }
         }
     }
 }
