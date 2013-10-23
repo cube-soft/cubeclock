@@ -59,12 +59,12 @@ namespace CubeClockTest.Ntp
                 var observer = new CubeClock.Ntp.Observer();
                 Assert.IsNotNull(observer.Client);
                 Assert.AreEqual(60 * 60 * 1000, observer.TimeToLive);
-                Assert.IsNull(observer.LastResult);
-                Assert.IsFalse(observer.IsValid);
-                Assert.AreEqual(0, observer.LocalClockOffset.TotalMilliseconds);
+                Assert.AreEqual(0, observer.FailedCount);
+
                 observer.Refresh();
                 Assert.IsNotNull(observer.LastResult);
                 Assert.IsTrue(observer.IsValid);
+                Assert.AreEqual(0, observer.FailedCount);
                 Assert.IsTrue(Math.Abs(observer.LocalClockOffset.TotalMilliseconds) > 0);
             }
             catch (Exception err)
@@ -89,13 +89,13 @@ namespace CubeClockTest.Ntp
             {
                 var observer = new CubeClock.Ntp.Observer();
                 Assert.IsNotNull(observer.Client);
-                Assert.IsNull(observer.LastResult);
-                Assert.IsFalse(observer.IsValid);
+                Assert.AreEqual(0, observer.FailedCount);
 
                 observer.Reset("ntp.nict.jp");
                 Assert.IsNotNull(observer.Client);
                 Assert.IsNotNull(observer.LastResult);
                 Assert.IsTrue(observer.IsValid);
+                Assert.AreEqual(0, observer.FailedCount);
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
         }

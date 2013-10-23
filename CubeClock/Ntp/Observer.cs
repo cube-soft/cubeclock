@@ -61,6 +61,7 @@ namespace CubeClock.Ntp
             _worker = new BackgroundWorker();
             _worker.WorkerSupportsCancellation = true;
             _worker.DoWork += new DoWorkEventHandler(OnDoWork);
+            _worker.RunWorkerAsync();
         }
 
         /* ----------------------------------------------------------------- */
@@ -175,6 +176,20 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
+        /// FailedCount
+        /// 
+        /// <summary>
+        /// NTP サーバとの通信に失敗した回数を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public int FailedCount
+        {
+            get { return _failed; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// LocalClockOffset
         /// 
         /// <summary>
@@ -235,6 +250,7 @@ namespace CubeClock.Ntp
             catch (Exception err)
             {
                 Trace.WriteLine(err.ToString());
+                ++_failed;
                 if (max_retry > 0)
                 {
                     System.Threading.Thread.Sleep(interval);
@@ -264,25 +280,19 @@ namespace CubeClock.Ntp
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public void Reset(string host_or_ipaddr, int port = 123)
+        public void Reset(string host_or_ipaddr, int port = 123) { Reset(new Ntp.Client(host_or_ipaddr, port)); }
+        public void Reset(Ntp.Client client)
         {
-            var preserve = _client;
-            var last = _last;
-            try
-            {
-                if (_worker.IsBusy && !_worker.CancellationPending) _worker.CancelAsync();
-                while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
-                _client = new Ntp.Client(host_or_ipaddr, port);
-                _client.ReceiveTimeout = preserve.ReceiveTimeout;
-                _last = null;
-                Refresh();
-            }
-            catch (Exception err)
-            {
-                Trace.WriteLine(err.ToString());
-                _client = preserve;
-                _last = last;
-            }
+            if (_worker.IsBusy && !_worker.CancellationPending) _worker.CancelAsync();
+            while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
+
+            client.ReceiveTimeout = _client.ReceiveTimeout;
+            var packet = client.Receive();
+            if (packet == null || !packet.IsValid) return;
+
+            _client = client;
+            _last   = packet;
+            _failed = 0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -329,6 +339,7 @@ namespace CubeClock.Ntp
         private Ntp.Client _client = null;
         private Ntp.Packet _last = null;
         private int _ttl = 60 * 60 * 1000;
+        private int _failed = 0;
         private BackgroundWorker _worker = null;
         private object _lock = new object();
         #endregion
