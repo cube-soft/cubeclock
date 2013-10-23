@@ -153,6 +153,28 @@ namespace CubeClock.Ntp
 
         /* ----------------------------------------------------------------- */
         ///
+        /// IsValid
+        /// 
+        /// <summary>
+        /// NTP サーバから取得した最新の結果が有効であるかどうか表す値を
+        /// 取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool IsValid
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return (_last != null && _last.IsValid &&
+                        (DateTime.Now - _last.CreationTime).TotalMilliseconds <= _ttl);
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// LocalClockOffset
         /// 
         /// <summary>
@@ -173,8 +195,7 @@ namespace CubeClock.Ntp
             {
                 lock (_lock)
                 {
-                    var refresh = (_last == null || (DateTime.Now - _last.CreationTime).TotalMilliseconds > _ttl);
-                    if (refresh && !_worker.IsBusy) _worker.RunWorkerAsync();
+                    if (!IsValid && !_worker.IsBusy) _worker.RunWorkerAsync();
                     return (_last != null) ? _last.LocalClockOffset : new TimeSpan(0);
                 }
             }
@@ -205,7 +226,7 @@ namespace CubeClock.Ntp
             lock (_lock)
             {
                 var packet = _client.Receive();
-                if (packet != null && packet.IsValid()) _last = packet;
+                if (packet != null && packet.IsValid) _last = packet;
             }
         }
 
@@ -221,23 +242,40 @@ namespace CubeClock.Ntp
         public void Reset(string host_or_ipaddr, int port = 123)
         {
             var preserve = _client;
-            var latest = _last;
+            var last = _last;
             try
             {
-                if (_worker.IsBusy)
-                {
-                    _worker.CancelAsync();
-                    while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
-                    _client = new Ntp.Client(host_or_ipaddr, port);
-                    _client.ReceiveTimeout = preserve.ReceiveTimeout;
-                    Refresh();
-                }
+                if (_worker.IsBusy && !_worker.CancellationPending) _worker.CancelAsync();
+                while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
+                _client = new Ntp.Client(host_or_ipaddr, port);
+                _client.ReceiveTimeout = preserve.ReceiveTimeout;
+                _last = null;
+                Refresh();
             }
             catch (Exception err)
             {
                 _client = preserve;
-                _last = latest;
+                _last = last;
                 Trace.WriteLine(err.ToString());
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Synchronize
+        /// 
+        /// <summary>
+        /// システム時計の時刻を NTP サーバと同期します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public void Synchronize()
+        {
+            lock (_lock)
+            {
+                if (!IsValid) Refresh();
+                CubeClock.SystemClock.Adjust(LocalClockOffset);
+                _last = null;
             }
         }
 
@@ -265,7 +303,7 @@ namespace CubeClock.Ntp
         #region Variables
         private Ntp.Client _client = null;
         private Ntp.Packet _last = null;
-        private int _ttl = 30 * 60 * 1000;
+        private int _ttl = 60 * 60 * 1000;
         private BackgroundWorker _worker = null;
         private object _lock = new object();
         #endregion

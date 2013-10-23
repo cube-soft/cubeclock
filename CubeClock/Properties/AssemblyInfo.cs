@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("CubeClock")]
+[assembly: AssemblyTitle("CubeClockLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CubeClock")]
+[assembly: AssemblyProduct("CubeClockLib")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
-[assembly: Guid("73f5d4b2-7024-4f36-813e-d79e0f7418a6")]
+[assembly: Guid("4c621673-cc52-483b-8334-2772ed77502b")]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 //

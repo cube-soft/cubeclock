@@ -29,7 +29,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace CubeClock.Ntp
+namespace CubeClock
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -99,9 +99,7 @@ namespace CubeClock.Ntp
         {
             try
             {
-                var sync = new CubeClock.Ntp.TimeSync(_observer.Client);
-                sync.Run();
-                _observer.Refresh();
+                _observer.Synchronize();
                 _notified = false;
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }

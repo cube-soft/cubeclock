@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// Ntp/PacketTester.cs
+/// Ntp/ClientTester.cs
 /// 
 /// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
@@ -28,50 +28,45 @@
 using System;
 using NUnit.Framework;
 
-namespace CubeClockLibTest.Ntp
+namespace CubeClockTest.Ntp
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// TimestampTester
+    /// ClientTester
     ///
     /// <summary>
-    /// Packet クラスのテストをするためのクラスです。
+    /// Client クラスのテストをするためのクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class PacketTester
+    public class ClientTester
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// TestCreatePacket
+        /// TestReceive
         /// 
         /// <summary>
-        /// 送信用の NTP パケットを生成するテストを行います。
+        /// NTP サーバと通信するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestCreatePacket() {
-            var packet = new CubeClock.Ntp.Packet();
-            Assert.IsTrue(packet.IsValid());
-            Assert.AreEqual(CubeClock.Ntp.LeapIndicator.NoWarning, packet.LeapIndicator);
-            Assert.AreEqual(3, packet.Version);
-            Assert.AreEqual(CubeClock.Ntp.Mode.Client, packet.Mode);
-            Assert.AreEqual(CubeClock.Ntp.Stratum.Unspecified, packet.Stratum);
-            Assert.AreEqual(0, packet.PollInterval);
-            Assert.AreEqual(1.0, packet.Precision);
-            Assert.AreEqual(0.0, packet.RootDelay);
-            Assert.AreEqual(0.0, packet.RootDispersion);
-            Assert.IsNullOrEmpty(packet.ReferenceID);
-            Assert.IsNullOrEmpty(packet.KeyID);
-            Assert.IsNullOrEmpty(packet.MessageDigest);
-            Assert.AreEqual(packet.CreationTime.Year,   packet.TransmitTimestamp.Year);
-            Assert.AreEqual(packet.CreationTime.Month,  packet.TransmitTimestamp.Month);
-            Assert.AreEqual(packet.CreationTime.Day,    packet.TransmitTimestamp.Day);
-            Assert.AreEqual(packet.CreationTime.Hour,   packet.TransmitTimestamp.Hour);
-            Assert.AreEqual(packet.CreationTime.Minute, packet.TransmitTimestamp.Minute);
-            Assert.AreEqual(packet.CreationTime.Second, packet.TransmitTimestamp.Second);
+        public void TestReceive()
+        {
+            try
+            {
+                var client = new CubeClock.Ntp.Client();
+                Assert.IsNotNullOrEmpty(client.Host.HostName);
+                Assert.IsTrue(client.Host.AddressList.Length > 0);
+                Assert.AreEqual(123, client.Port);
+                Assert.AreEqual(2000, client.ReceiveTimeout);
+
+                var packet = client.Receive();
+                Assert.IsNotNull(packet);
+                Assert.IsTrue(packet.IsValid);
+            }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
     }
 }
