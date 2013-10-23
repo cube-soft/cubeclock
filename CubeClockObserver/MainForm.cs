@@ -84,6 +84,9 @@ namespace CubeClock
             try
             {
                 var local  = DateTime.Now;
+                if (Math.Abs((local - _last).TotalSeconds) > 3.0) _observer.Reset();
+                _last = local;
+
                 var server = local + _observer.LocalClockOffset;
                 LocalClockLabel.Text  = local.ToString();
                 ServerClockLabel.Text = server.ToString();
@@ -252,6 +255,7 @@ namespace CubeClock
         private int _threshold = 5;
         private bool _notified = false;
         private bool _exit = false;
+        private DateTime _last = DateTime.Now;
         #endregion
     }
 }
