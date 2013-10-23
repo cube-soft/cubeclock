@@ -283,16 +283,36 @@ namespace CubeClock.Ntp
         public void Reset(string host_or_ipaddr, int port = 123) { Reset(new Ntp.Client(host_or_ipaddr, port)); }
         public void Reset(Ntp.Client client)
         {
-            if (_worker.IsBusy && !_worker.CancellationPending) _worker.CancelAsync();
-            while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
+            lock (_lock)
+            {
+                CancelBackgroundWorker();
+                client.ReceiveTimeout = _client.ReceiveTimeout;
+                var packet = client.Receive();
+                if (packet == null || !packet.IsValid) return;
 
-            client.ReceiveTimeout = _client.ReceiveTimeout;
-            var packet = client.Receive();
-            if (packet == null || !packet.IsValid) return;
+                _client = client;
+                _last   = packet;
+                _failed = 0;
+            }
+        }
 
-            _client = client;
-            _last   = packet;
-            _failed = 0;
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Clear
+        /// 
+        /// <summary>
+        /// 取得している更新結果等を破棄します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void Clear()
+        {
+            lock (_lock)
+            {
+                CancelBackgroundWorker();
+                _last   = null;
+                _failed = 0;
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -331,6 +351,25 @@ namespace CubeClock.Ntp
         {
             if (e.Cancel) return;
             Refresh(3, new TimeSpan(0, 0, 5));
+        }
+
+        #endregion
+
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CancelBackgroundWorker
+        /// 
+        /// <summary>
+        /// バックグラウンドで実行中の処理をキャンセルします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void CancelBackgroundWorker()
+        {
+            if (_worker.IsBusy && !_worker.CancellationPending) _worker.CancelAsync();
+            while (_worker.CancellationPending) System.Threading.Thread.Sleep(20);
         }
 
         #endregion
