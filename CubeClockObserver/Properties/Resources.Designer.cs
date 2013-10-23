@@ -61,7 +61,7 @@ namespace CubeClock.Properties {
         }
         
         /// <summary>
-        ///   http://sogap.cielquis.net/common/adtest.html に類似しているローカライズされた文字列を検索します。
+        ///   http://cielquis.net/trash/ad-dummy.html に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string AdUrl {
             get {

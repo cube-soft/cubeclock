@@ -57,6 +57,7 @@ namespace CubeClock
         {
             InitializeComponent();
             ClockTimer.Start();
+            SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
             AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
         }
 
@@ -105,6 +106,48 @@ namespace CubeClock
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm_FormClosing
+        ///
+        /// <summary>
+        /// Close() メソッドが実行された時に実行されるイベントハンドラです。
+        /// ユーザが×ボタンを押した場合にはタスクトレイにのみ表示し、
+        /// プロセス自体の終了は、タスクトレイのメニューから「終了」を
+        /// 選択した場合のみとします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_exit)
+            {
+                Hide();
+                e.Cancel = true;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// OpenItem_Click
+        ///
+        /// <summary>
+        /// タスクトレイに表示（最小化）時、「開く」メニューを選択した時に
+        /// 実行されるイベントハンドラです。このイベントハンドラは、
+        /// タスクトレイに表示されているアイコンを右クリックした時に
+        /// 表示されるコンテキストメニューの他、アイコンをダブルクリック
+        /// した時にも実行されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void OpenItem_Click(object sender, EventArgs e)
+        {
+            if (Visible) return;
+            Show();
+            WindowState = FormWindowState.Normal;
+            Activate();
+        }
+
         #endregion
 
         #region Other methods
@@ -135,12 +178,46 @@ namespace CubeClock
             else SyncNotifyIcon.Text = "CubeClock";
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateContextMenuStrip
+        /// 
+        /// <summary>
+        /// アプリケーションで使用するコンテキストメニュを生成します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private ContextMenuStrip CreateContextMenuStrip()
+        {
+            var dest = new ContextMenuStrip();
+
+            var open = new ToolStripMenuItem();
+            open.Name = "OpenToolStripMenuItem";
+            open.Size = new System.Drawing.Size(100, 22);
+            open.Text = "開く";
+            open.Click += new System.EventHandler(this.OpenItem_Click);
+            dest.Items.Add(open);
+
+            var exit = new ToolStripMenuItem();
+            exit.Name = "ExitToolStripMenuItem";
+            exit.Size = new System.Drawing.Size(100, 22);
+            exit.Text = "終了";
+            exit.Click += (sender, e) => {
+                this._exit = true;
+                this.Close();
+            };
+            dest.Items.Add(exit);
+
+            return dest;
+        }
+
         #endregion
 
         #region Variables
         private Ntp.Observer _observer = new Ntp.Observer();
         private int _threshold = 5;
         private bool _notified = false;
+        private bool _exit = false;
         #endregion
     }
 }

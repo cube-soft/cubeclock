@@ -102,6 +102,7 @@
             this.SyncNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("SyncNotifyIcon.Icon")));
             this.SyncNotifyIcon.Text = "CubeClock";
             this.SyncNotifyIcon.Visible = true;
+            this.SyncNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OpenItem_Click);
             // 
             // AdWebBrowser
             // 
@@ -128,9 +129,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MainForm";
-            this.ShowInTaskbar = false;
             this.Text = "CubeClock";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
