@@ -334,7 +334,7 @@ namespace CubeClock.Ntp
         {
             lock (_lock)
             {
-                if (!IsValid) Refresh(3, new TimeSpan(0, 0, 5));
+                if (!IsValid) Refresh(3, TimeSpan.FromSeconds(5));
                 CubeClock.SystemClock.Adjust(LocalClockOffset);
                 _last = null;
             }
@@ -356,7 +356,7 @@ namespace CubeClock.Ntp
         private void OnDoWork(object sender, DoWorkEventArgs e)
         {
             if (e.Cancel) return;
-            Refresh(3, new TimeSpan(0, 0, 5));
+            Refresh(3, TimeSpan.FromSeconds(5));
         }
 
         #endregion
