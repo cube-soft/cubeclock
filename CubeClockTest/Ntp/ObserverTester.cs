@@ -58,9 +58,9 @@ namespace CubeClockTest.Ntp
             try
             {
                 var observer = new CubeClock.Ntp.Observer();
-                observer.Client.ReceiveTimeout = 1000;
+                observer.Client.ReceiveTimeout = TimeSpan.FromSeconds(1);
                 Assert.IsNotNull(observer.Client);
-                Assert.AreEqual(60 * 60 * 1000, observer.TimeToLive);
+                Assert.AreEqual(TimeSpan.FromHours(1), observer.TimeToLive);
                 Assert.AreEqual(0, observer.FailedCount);
 
                 observer.Refresh();
@@ -93,7 +93,7 @@ namespace CubeClockTest.Ntp
         public void TestReset()
         {
             var observer = new CubeClock.Ntp.Observer();
-            observer.Client.ReceiveTimeout = 1000;
+            observer.Client.ReceiveTimeout = TimeSpan.FromSeconds(1);
             Assert.IsNotNull(observer.Client);
             Assert.AreEqual(0, observer.FailedCount); 
 
@@ -112,7 +112,7 @@ namespace CubeClockTest.Ntp
 
             try
             {
-                observer.Client.ReceiveTimeout = 100;
+                observer.Client.ReceiveTimeout = TimeSpan.FromMilliseconds(100);
                 observer.Reset("404.not.found.com");
                 Assert.Fail("never reached");
             }

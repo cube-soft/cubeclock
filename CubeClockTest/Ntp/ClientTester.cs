@@ -60,7 +60,7 @@ namespace CubeClockTest.Ntp
                 Assert.IsNotNullOrEmpty(client.Host.HostName);
                 Assert.IsTrue(client.Host.AddressList.Length > 0);
                 Assert.AreEqual(123, client.Port);
-                Assert.AreEqual(5000, client.ReceiveTimeout);
+                Assert.AreEqual(TimeSpan.FromSeconds(5), client.ReceiveTimeout);
 
                 var packet = client.Receive();
                 Assert.IsNotNull(packet);

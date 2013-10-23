@@ -119,12 +119,11 @@ namespace CubeClock.Ntp
         /// ReceiveTimeout
         /// 
         /// <summary>
-        /// NTP パケット受信時のタイムアウト時間 (ms) を取得、または設定
-        /// します。
+        /// NTP パケット受信時のタイムアウト時間を取得、または設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public int ReceiveTimeout
+        public TimeSpan ReceiveTimeout
         {
             get { return _timeout; }
             set { _timeout = value; }
@@ -166,7 +165,7 @@ namespace CubeClock.Ntp
         private Socket CreateSocket()
         {
             var dest = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            dest.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, _timeout);
+            dest.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, (int)_timeout.TotalMilliseconds);
             return dest;
         }
 
@@ -207,7 +206,7 @@ namespace CubeClock.Ntp
         #region Variables
         private IPHostEntry _host = null;
         private IPEndPoint _endpoint = null;
-        private int _timeout = 5000;
+        private TimeSpan _timeout = TimeSpan.FromSeconds(5);
         #endregion
     }
 }

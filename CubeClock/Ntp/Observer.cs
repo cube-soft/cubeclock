@@ -97,12 +97,11 @@ namespace CubeClock.Ntp
         /// Timeout
         /// 
         /// <summary>
-        /// NTP サーバとの通信時のタイムアウト時間をミリ秒単位で取得、
-        /// または設定します。
+        /// NTP サーバとの通信時のタイムアウト時間を取得、または設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public int Timeout
+        public TimeSpan Timeout
         {
             get { return _client.ReceiveTimeout; }
             set { _client.ReceiveTimeout = value; }
@@ -113,12 +112,12 @@ namespace CubeClock.Ntp
         /// TimeToLive
         /// 
         /// <summary>
-        /// NTP サーバから取得した最新の結果が有効な時間をミリ秒単位で
-        /// 取得、または設定します。
+        /// NTP サーバから取得した最新の結果が有効な時間を取得、または
+        /// 設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public int TimeToLive
+        public TimeSpan TimeToLive
         {
             get { return _ttl; }
             set { _ttl = value; }
@@ -167,8 +166,7 @@ namespace CubeClock.Ntp
             get
             {
                 var packet = _last;
-                return (packet != null && packet.IsValid &&
-                    (DateTime.Now - packet.CreationTime).TotalMilliseconds <= _ttl);
+                return (packet != null && packet.IsValid && DateTime.Now - packet.CreationTime <= _ttl);
             }
         }
 
@@ -383,7 +381,7 @@ namespace CubeClock.Ntp
         #region Variables
         private Ntp.Client _client = null;
         private Ntp.Packet _last = null;
-        private int _ttl = 60 * 60 * 1000;
+        private TimeSpan _ttl = TimeSpan.FromHours(1);
         private int _failed = 0;
         private BackgroundWorker _worker = null;
         private object _lock = new object();
