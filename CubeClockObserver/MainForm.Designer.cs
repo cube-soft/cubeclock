@@ -82,6 +82,7 @@
             // 
             // ClockTimer
             // 
+            this.ClockTimer.Interval = 1000;
             this.ClockTimer.Tick += new System.EventHandler(this.ClockTimer_Tick);
             // 
             // SyncButton

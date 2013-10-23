@@ -56,9 +56,13 @@ namespace CubeClock
         public MainForm()
         {
             InitializeComponent();
-            ClockTimer.Start();
+            
+            LocalClockLabel.Text = DateTime.Now.ToString();
+            ServerClockLabel.Text = LocalClockLabel.Text;
             SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
             AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
+
+            ClockTimer.Start();
         }
 
         #endregion
