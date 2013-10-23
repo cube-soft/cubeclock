@@ -166,11 +166,9 @@ namespace CubeClock.Ntp
         {
             get
             {
-                lock (_lock)
-                {
-                    return (_last != null && _last.IsValid &&
-                        (DateTime.Now - _last.CreationTime).TotalMilliseconds <= _ttl);
-                }
+                var packet = _last;
+                return (packet != null && packet.IsValid &&
+                    (DateTime.Now - packet.CreationTime).TotalMilliseconds <= _ttl);
             }
         }
 
@@ -208,11 +206,9 @@ namespace CubeClock.Ntp
         {
             get
             {
-                lock (_lock)
-                {
-                    if (!IsValid && !_worker.IsBusy) _worker.RunWorkerAsync();
-                    return (_last != null) ? _last.LocalClockOffset : new TimeSpan(0);
-                }
+                if (!IsValid && !_worker.IsBusy) _worker.RunWorkerAsync();
+                var packet = _last;
+                return (packet != null) ? packet.LocalClockOffset : new TimeSpan(0);
             }
         }
 
@@ -283,13 +279,13 @@ namespace CubeClock.Ntp
         public void Reset(string host_or_ipaddr, int port = 123) { Reset(new Ntp.Client(host_or_ipaddr, port)); }
         public void Reset(Ntp.Client client)
         {
+            CancelBackgroundWorker();
+            client.ReceiveTimeout = _client.ReceiveTimeout;
+            var packet = client.Receive();
+            if (packet == null || !packet.IsValid) return;
+
             lock (_lock)
             {
-                CancelBackgroundWorker();
-                client.ReceiveTimeout = _client.ReceiveTimeout;
-                var packet = client.Receive();
-                if (packet == null || !packet.IsValid) return;
-
                 _client = client;
                 _last   = packet;
                 _failed = 0;
@@ -307,9 +303,9 @@ namespace CubeClock.Ntp
         /* ----------------------------------------------------------------- */
         public void Clear()
         {
+            CancelBackgroundWorker();
             lock (_lock)
             {
-                CancelBackgroundWorker();
                 _last   = null;
                 _failed = 0;
             }

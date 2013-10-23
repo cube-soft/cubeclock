@@ -58,6 +58,7 @@ namespace CubeClockTest.Ntp
             try
             {
                 var observer = new CubeClock.Ntp.Observer();
+                observer.Client.ReceiveTimeout = 1000;
                 Assert.IsNotNull(observer.Client);
                 Assert.AreEqual(60 * 60 * 1000, observer.TimeToLive);
                 Assert.AreEqual(0, observer.FailedCount);
@@ -92,6 +93,7 @@ namespace CubeClockTest.Ntp
         public void TestReset()
         {
             var observer = new CubeClock.Ntp.Observer();
+            observer.Client.ReceiveTimeout = 1000;
             Assert.IsNotNull(observer.Client);
             Assert.AreEqual(0, observer.FailedCount); 
 
