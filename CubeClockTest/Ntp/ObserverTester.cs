@@ -101,8 +101,8 @@ namespace CubeClockTest.Ntp
             {
                 observer.Reset("ntp.ring.gr.jp");
                 Assert.IsNotNull(observer.Client);
-                Assert.IsNotNull(observer.LastResult);
-                Assert.IsTrue(observer.IsValid);
+                Assert.IsNull(observer.LastResult);
+                Assert.IsFalse(observer.IsValid);
                 Assert.AreEqual(0, observer.FailedCount);
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
