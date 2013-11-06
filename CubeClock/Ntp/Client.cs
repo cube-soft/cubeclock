@@ -80,7 +80,7 @@ namespace CubeClock.Ntp
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Client() : this("time.windows.com") { }
+        public Client() : this("ntp.cube-soft.jp") { }
 
         #endregion
 

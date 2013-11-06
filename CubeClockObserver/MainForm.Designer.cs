@@ -105,7 +105,8 @@
             this.SyncNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("SyncNotifyIcon.Icon")));
             this.SyncNotifyIcon.Text = "CubeClock";
             this.SyncNotifyIcon.Visible = true;
-            this.SyncNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OpenItem_Click);
+            this.SyncNotifyIcon.BalloonTipClicked += new System.EventHandler(this.OpenItem_Click);
+            this.SyncNotifyIcon.DoubleClick += new System.EventHandler(this.OpenItem_Click);
             // 
             // AdWebBrowser
             // 
