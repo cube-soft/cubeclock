@@ -67,9 +67,9 @@ namespace CubeClock.Ntp
         public static DateTime ToDateTime(Int64 timestamp)
         {
             var seconds  = (UInt32)(timestamp >> 32);
-            var fraction = (UInt32)(timestamp & UInt32.MaxValue);
+            var fraction = (UInt64)(timestamp & UInt32.MaxValue);
 
-            var milliseconds = (Int64)seconds * 1000 + (fraction * 1000) / _CompensatingRate32;
+            var milliseconds = (UInt64)seconds * 1000 + (fraction * 1000) / _CompensatingRate32;
             var origin = ((seconds & _ConpensatingRate31) == 0) ? _ReverseTerm : _BaseTerm;
             
             return origin + TimeSpan.FromMilliseconds(milliseconds);
@@ -96,8 +96,8 @@ namespace CubeClock.Ntp
         }
 
         #region Constant variables
-        private static readonly Int64  _CompensatingRate32 = 0x100000000L;
-        private static readonly UInt32 _ConpensatingRate31 =  0x80000000u;
+        private static readonly UInt64 _CompensatingRate32 = 0x100000000L;
+        private static readonly UInt32 _ConpensatingRate31 = 0x80000000u;
         private static readonly DateTime _BaseTerm     = new DateTime(1900, 1, 1, 0,  0,  0, 0, DateTimeKind.Utc);
         private static readonly DateTime _ReverseTerm  = new DateTime(2036, 2, 7, 6, 28, 16, 0, DateTimeKind.Utc);
         #endregion
