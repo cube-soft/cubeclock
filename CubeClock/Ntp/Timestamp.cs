@@ -67,9 +67,9 @@ namespace CubeClock.Ntp
         public static DateTime ToDateTime(Int64 timestamp)
         {
             var seconds  = (UInt32)(timestamp >> 32);
-            var fraction = (UInt64)(timestamp & UInt32.MaxValue);
+            var fraction = (double)((UInt64)(timestamp & UInt32.MaxValue));
 
-            var milliseconds = (UInt64)seconds * 1000 + (fraction * 1000) / _CompensatingRate32;
+            var milliseconds = (double)seconds * 1000 + (fraction * 1000) / (_CompensatingRate32);
             var origin = ((seconds & _ConpensatingRate31) == 0) ? _ReverseTerm : _BaseTerm;
             
             return origin + TimeSpan.FromMilliseconds(milliseconds);
@@ -90,7 +90,7 @@ namespace CubeClock.Ntp
             var ticks  = (datetime - origin).TotalMilliseconds;
 
             var seconds  = (UInt32)((datetime - origin).TotalSeconds);
-            var fraction = (UInt32)((ticks % 1000) * _CompensatingRate32 / 1000);
+            var fraction = (UInt64)((ticks % 1000) * _CompensatingRate32 / 1000);
 
             return (Int64)(((UInt64)seconds << 32) | fraction);
         }
