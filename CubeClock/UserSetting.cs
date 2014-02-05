@@ -231,7 +231,7 @@ namespace CubeClock
                 var threshold = setting.Root.Find(_RegThreshold);
                 if (threshold != null) _threshold = threshold.GetValue(_threshold);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -259,12 +259,43 @@ namespace CubeClock
                 setting.Root.Add(new Cube.Settings.Node(_RegThreshold, _threshold));
 
                 setting.Write(root);
+
+                SaveStartup();
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
         #endregion
 
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SaveStartup
+        /// 
+        /// <summary>
+        /// スタートアップへの登録、または削除を行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SaveStartup()
+        {
+            using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
+            {
+                if (_boot)
+                {
+                    string value = startup.GetValue(_RegStartupName) as string;
+                    if (value == null && !string.IsNullOrEmpty(InstallDirectory))
+                    {
+                        var exec = System.IO.Path.Combine(InstallDirectory, _RegStartupExe);
+                        startup.SetValue(_RegStartupName, '"' + exec + "\"");
+                    }
+                }
+                else startup.DeleteValue(_RegStartupName, false);
+            }
+        }
+
+        #endregion
 
         #region Variables
         private string _path = string.Empty;
@@ -280,6 +311,8 @@ namespace CubeClock
         #region Constant variables
         private static readonly string _RegRoot = @"Software\CubeSoft\CubeClock";
         private static readonly string _RegPath = "InstallDirectory";
+        private static readonly string _RegStartupName = "CubeClock";
+        private static readonly string _RegStartupExe  = "CubeObserver.exe";
         private static readonly string _RegVersion = "Version";
         private static readonly string _RegServer = "Server";
         private static readonly string _RegBoot = "LaunchOnBoot";
