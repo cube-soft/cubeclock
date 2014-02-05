@@ -74,6 +74,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ntp\Client.cs" />
@@ -81,6 +82,11 @@
     <Compile Include="Ntp\Observer.cs" />
     <Compile Include="Ntp\Packet.cs" />
     <Compile Include="Ntp\Parameter.cs" />
+    <Compile Include="Settings\Document.cs" />
+    <Compile Include="Settings\FileFormat.cs" />
+    <Compile Include="Settings\Node.cs" />
+    <Compile Include="Settings\NodeSet.cs" />
+    <Compile Include="Settings\ValueKind.cs" />
     <Compile Include="SystemClock.cs" />
     <Compile Include="Ntp\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
