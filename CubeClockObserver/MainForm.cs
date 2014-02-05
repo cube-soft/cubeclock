@@ -242,7 +242,7 @@ namespace CubeClockObserver
             
             var dest = new System.Text.StringBuilder();
             if (hour > 0) dest.AppendFormat(" {0} {1}", hour, Properties.Resources.HourUnit);
-            if (min > 0) dest.AppendFormat(" {0} {1}", min, Properties.Resources.MinuteUnit);
+            if (hour > 0 || min > 0) dest.AppendFormat(" {0} {1}", min, Properties.Resources.MinuteUnit);
             dest.AppendFormat(" {0} {1:f3}", sec, Properties.Resources.SecondUnit);
 
             return dest.ToString();
