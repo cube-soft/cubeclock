@@ -141,7 +141,9 @@ namespace CubeClockObserver
             try
             {
                 var info   = new System.Diagnostics.ProcessStartInfo();
-                var dir    = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var dir    = !string.IsNullOrEmpty(_setting.InstallDirectory) ?
+                    _setting.InstallDirectory :
+                    System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 var exec   = System.IO.Path.Combine(dir, "CubeClockAdjuster.exe");
                 var offset = (int)_observer.LocalClockOffset.TotalMilliseconds;
                 info.FileName = exec;
