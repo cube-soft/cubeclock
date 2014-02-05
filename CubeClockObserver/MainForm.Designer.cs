@@ -47,7 +47,7 @@
             this.label1.Location = new System.Drawing.Point(20, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(101, 16);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 100;
             this.label1.Text = "パソコンの時刻";
             // 
             // label2
@@ -57,7 +57,7 @@
             this.label2.Location = new System.Drawing.Point(28, 31);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 16);
-            this.label2.TabIndex = 2;
+            this.label2.TabIndex = 100;
             this.label2.Text = "サーバの時刻";
             // 
             // LocalClockLabel
@@ -67,7 +67,7 @@
             this.LocalClockLabel.Location = new System.Drawing.Point(141, 9);
             this.LocalClockLabel.Name = "LocalClockLabel";
             this.LocalClockLabel.Size = new System.Drawing.Size(174, 16);
-            this.LocalClockLabel.TabIndex = 3;
+            this.LocalClockLabel.TabIndex = 100;
             this.LocalClockLabel.Text = "2013/10/22 11:11:11.012";
             // 
             // ServerClockLabel
@@ -77,7 +77,7 @@
             this.ServerClockLabel.Location = new System.Drawing.Point(141, 31);
             this.ServerClockLabel.Name = "ServerClockLabel";
             this.ServerClockLabel.Size = new System.Drawing.Size(174, 16);
-            this.ServerClockLabel.TabIndex = 4;
+            this.ServerClockLabel.TabIndex = 100;
             this.ServerClockLabel.Text = "2013/10/22 11:11:12.023";
             // 
             // ClockTimer
@@ -91,7 +91,7 @@
             this.SyncButton.Name = "SyncButton";
             this.SyncButton.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             this.SyncButton.Size = new System.Drawing.Size(224, 28);
-            this.SyncButton.TabIndex = 5;
+            this.SyncButton.TabIndex = 0;
             this.SyncButton.Text = "時刻を同期する...";
             this.SyncButton.UseVisualStyleBackColor = true;
             this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
@@ -112,7 +112,7 @@
             this.SettingButton.Location = new System.Drawing.Point(242, 72);
             this.SettingButton.Name = "SettingButton";
             this.SettingButton.Size = new System.Drawing.Size(75, 28);
-            this.SettingButton.TabIndex = 6;
+            this.SettingButton.TabIndex = 1;
             this.SettingButton.Text = "設定...";
             this.SettingButton.UseVisualStyleBackColor = true;
             this.SettingButton.Click += new System.EventHandler(this.SettingButton_Click);

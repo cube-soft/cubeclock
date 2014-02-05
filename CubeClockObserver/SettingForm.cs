@@ -26,6 +26,7 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CubeClockObserver
@@ -56,9 +57,25 @@ namespace CubeClockObserver
         {
             InitializeComponent();
 
-            HideOnStartCheckBox.Enabled = ResidentCheckBox.Checked;
-            IgnoreMsecLabel.Enabled = ShowBalloonCheckBox.Checked;
-            IgnoreMsecNumericUpDown.Enabled = ShowBalloonCheckBox.Checked;
+            HideOnLaunchCheckBox.Enabled = ResidentCheckBox.Checked;
+            NotifyThresholdLabel.Enabled = NotifyCheckBox.Checked;
+            NotifyThresholdNumericUpDown.Enabled = NotifyCheckBox.Checked;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SettingForm (constructor)
+        /// 
+        /// <summary>
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public SettingForm(CubeClock.UserSetting setting)
+            : this()
+        {
+            _setting = setting;
+            LoadSettings();
         }
 
         #endregion
@@ -76,6 +93,7 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            SaveSettings();
             Close();
         }
 
@@ -108,7 +126,7 @@ namespace CubeClockObserver
             var control = sender as CheckBox;
             if (control == null) return;
 
-            HideOnStartCheckBox.Enabled = control.Checked;
+            HideOnLaunchCheckBox.Enabled = control.Checked;
         }
 
         /* ----------------------------------------------------------------- */
@@ -126,10 +144,70 @@ namespace CubeClockObserver
             var control = sender as CheckBox;
             if (control == null) return;
 
-            IgnoreMsecLabel.Enabled = control.Checked;
-            IgnoreMsecNumericUpDown.Enabled = control.Checked;
+            NotifyThresholdLabel.Enabled = control.Checked;
+            NotifyThresholdNumericUpDown.Enabled = control.Checked;
         }
 
+        #endregion
+
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadSetting
+        /// 
+        /// <summary>
+        /// 設定内容を GUI に反映します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void LoadSettings()
+        {
+            if (_setting == null) return;
+
+            try
+            {
+                ServerTextBox.Text = _setting.Sever;
+                LaunchOnBootCheckBox.Checked = _setting.LaunchOnBoot;
+                ResidentCheckBox.Checked = _setting.Resident;
+                HideOnLaunchCheckBox.Checked = _setting.HideOnLaunch;
+                NotifyCheckBox.Checked = _setting.Notify;
+                NotifyThresholdNumericUpDown.Value = _setting.NotifyThreshold;
+            }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadSetting
+        /// 
+        /// <summary>
+        /// GUI の内容を UserSetting オブジェクトに保存します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SaveSettings()
+        {
+            if (_setting == null) return;
+
+            try
+            {
+                _setting.Sever = ServerTextBox.Text;
+                _setting.LaunchOnBoot = LaunchOnBootCheckBox.Checked;
+                _setting.Resident = ResidentCheckBox.Checked;
+                _setting.HideOnLaunch = HideOnLaunchCheckBox.Checked;
+                _setting.Notify = NotifyCheckBox.Checked;
+                _setting.NotifyThreshold = (int)NotifyThresholdNumericUpDown.Value;
+
+                _setting.Save();
+            }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
+        #endregion
+
+        #region Variables
+        private CubeClock.UserSetting _setting = null;
         #endregion
     }
 }
