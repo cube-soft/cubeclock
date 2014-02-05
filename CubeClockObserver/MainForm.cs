@@ -56,26 +56,10 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         public MainForm()
         {
-            _setting = new CubeClock.UserSetting();
             _setting.Load();
             InitializeComponent();
             InitializeUserComponent();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MainForm (constructor)
-        /// 
-        /// <summary>
-        /// 既定の値でオブジェクトを初期化します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public MainForm(CubeClock.UserSetting setting)
-        {
-            _setting = setting;
-            InitializeComponent();
-            InitializeUserComponent();
+            ClockTimer.Start();
         }
 
         /* ----------------------------------------------------------------- */
@@ -83,7 +67,7 @@ namespace CubeClockObserver
         /// InitializeUserComponent
         /// 
         /// <summary>
-        /// GUI を初期化します。
+        /// GUI の表示に関連する初期化を行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -95,7 +79,37 @@ namespace CubeClockObserver
             LocalClockLabel.Text = DateTime.Now.ToString(Properties.Resources.ClockFormat);
             ServerClockLabel.Text = LocalClockLabel.Text;
 
-            ClockTimer.Start();
+            if (_setting.Resident && _setting.HideOnLaunch)
+            {
+                ShowInTaskbar = false;
+                WindowState = FormWindowState.Minimized;
+            }
+        }
+
+        #endregion
+
+        #region MainForm's event handlers
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// OnFormClosing
+        ///
+        /// <summary>
+        /// Close() メソッドが実行された時に実行されるイベントハンドラです。
+        /// ユーザが×ボタンを押した場合にはタスクトレイにのみ表示し、
+        /// プロセス自体の終了は、タスクトレイのメニューから「終了」を
+        /// 選択した場合のみとします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        protected override void  OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_setting.Resident && !_closing)
+            {
+                Hide();
+                e.Cancel = true;
+            }
+            base.OnFormClosing(e);
         }
 
         #endregion
@@ -179,27 +193,6 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm_FormClosing
-        ///
-        /// <summary>
-        /// Close() メソッドが実行された時に実行されるイベントハンドラです。
-        /// ユーザが×ボタンを押した場合にはタスクトレイにのみ表示し、
-        /// プロセス自体の終了は、タスクトレイのメニューから「終了」を
-        /// 選択した場合のみとします。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (_setting.Resident && !_exit)
-            {
-                Hide();
-                e.Cancel = true;
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// OpenItem_Click
         ///
         /// <summary>
@@ -213,9 +206,10 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void OpenItem_Click(object sender, EventArgs e)
         {
+            WindowState = FormWindowState.Normal;
+            if (!ShowInTaskbar) ShowInTaskbar = true;
             if (Visible) return;
             Show();
-            WindowState = FormWindowState.Normal;
             Activate();
         }
 
@@ -326,8 +320,8 @@ namespace CubeClockObserver
             exit.Size = new System.Drawing.Size(100, 22);
             exit.Text = "終了";
             exit.Click += (sender, e) => {
-                this._exit = true;
-                this.Close();
+                _closing = true;
+                Close();
             };
             dest.Items.Add(exit);
 
@@ -340,8 +334,8 @@ namespace CubeClockObserver
         private CubeClock.UserSetting _setting = new CubeClock.UserSetting();
         private CubeClock.Ntp.Observer _observer = new CubeClock.Ntp.Observer();
         private bool _notified = false;
+        private bool _closing = false;
         private Stopwatch _sw = new Stopwatch(); // Timer for delayed notify
-        private bool _exit = false;
         private DateTime _last = DateTime.Now;
         #endregion
     }
