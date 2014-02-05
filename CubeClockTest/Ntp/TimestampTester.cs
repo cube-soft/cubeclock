@@ -130,15 +130,15 @@ namespace CubeClockTest.Ntp
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(1970,  1,  1,  0,  0,  0)]
-        [TestCase(1999, 12, 31, 23, 59, 59)]
-        [TestCase(2000,  1,  1,  0,  0,  0)]
-        [TestCase(2036,  2,  7,  6, 28, 15)]
-        [TestCase(2036,  2,  7,  6, 28, 16)]
-        [TestCase(2104,  1,  1,  0,  0,  0)]
-        public void TestConvertDetail(int year, int month, int day, int hour, int minute, int second)
+        [TestCase(1970,  1,  1,  0,  0,  0,   0)]
+        [TestCase(1999, 12, 31, 23, 59, 59, 999)]
+        [TestCase(2000,  1,  1,  0,  0,  0,   0)]
+        [TestCase(2036,  2,  7,  6, 28, 15, 999)]
+        [TestCase(2036,  2,  7,  6, 28, 16,   0)]
+        [TestCase(2104,  1,  1,  0,  0,  0,   0)]
+        public void TestConvertDetail(int year, int month, int day, int hour, int minute, int second, int msec)
         {
-            var datetime = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
+            var datetime = new DateTime(year, month, day, hour, minute, second, msec, DateTimeKind.Utc);
             var timestamp = CubeClock.Ntp.Timestamp.ToTimestamp(datetime);
             var converted = CubeClock.Ntp.Timestamp.ToDateTime(timestamp);
             Assert.AreEqual(year,   converted.Year);
@@ -147,6 +147,7 @@ namespace CubeClockTest.Ntp
             Assert.AreEqual(hour,   converted.Hour);
             Assert.AreEqual(minute, converted.Minute);
             Assert.AreEqual(second, converted.Second);
+            Assert.AreEqual(msec,   converted.Millisecond);
         }
     }
 }
