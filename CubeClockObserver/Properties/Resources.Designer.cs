@@ -79,6 +79,15 @@ namespace CubeClockObserver.Properties {
         }
         
         /// <summary>
+        ///   CubeClock エラー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ErrorTitle {
+            get {
+                return ResourceManager.GetString("ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HourUnit {
@@ -102,6 +111,16 @@ namespace CubeClockObserver.Properties {
         internal static string SecondUnit {
             get {
                 return ResourceManager.GetString("SecondUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   サーバとの通信に失敗しました。
+        ///サーバのホスト名、または IP アドレスを確認して下さい。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ServerFailed {
+            get {
+                return ResourceManager.GetString("ServerFailed", resourceCulture);
             }
         }
         

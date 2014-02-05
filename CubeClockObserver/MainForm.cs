@@ -170,7 +170,11 @@ namespace CubeClockObserver
         private void SettingButton_Click(object sender, EventArgs e)
         {
             var dialog = new SettingForm(_setting);
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) ResetNotify();
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _observer.Reset(_setting.Sever);
+                ResetNotify();
+            }
         }
 
         /* ----------------------------------------------------------------- */

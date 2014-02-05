@@ -93,7 +93,15 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            if (!IsValidServer())
+            {
+                MessageBox.Show(Properties.Resources.ServerFailed, Properties.Resources.ErrorTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
             SaveSettings();
+            DialogResult = System.Windows.Forms.DialogResult.OK;
             Close();
         }
 
@@ -202,6 +210,36 @@ namespace CubeClockObserver
                 _setting.Save();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// IsValidServer
+        /// 
+        /// <summary>
+        /// 設定されたサーバと通信を試み、正しい NTP サーバかどうかを判別
+        /// します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 現在は、設定されたサーバとの通信が成功し、何らかのパケットが
+        /// 返ってきたら OK と判断しています。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private bool IsValidServer()
+        {
+            try
+            {
+                var client = new CubeClock.Ntp.Client(ServerTextBox.Text);
+                var packet = client.Receive();
+                return true;
+            }
+            catch (Exception err)
+            {
+                Trace.WriteLine(err.ToString());
+                return false;
+            }
         }
 
         #endregion
