@@ -61,10 +61,8 @@ namespace CubeClockObserver
             var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
             SyncButton.Image = shield.ToBitmap();
             SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
-            LocalClockLabel.Text = DateTime.Now.ToString();
+            LocalClockLabel.Text = DateTime.Now.ToString(Properties.Resources.ClockFormat);
             ServerClockLabel.Text = LocalClockLabel.Text;
-            AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
-            AdWebBrowser.Document.Click += new HtmlElementEventHandler(Document_Click);
 
             ClockTimer.Start();
         }
@@ -91,8 +89,8 @@ namespace CubeClockObserver
                 _last = local;
 
                 var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
+                LocalClockLabel.Text  = local.ToString(Properties.Resources.ClockFormat);
+                ServerClockLabel.Text = server.ToString(Properties.Resources.ClockFormat);
                 UpdateNotifyIcon();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
@@ -125,6 +123,21 @@ namespace CubeClockObserver
                 _notified = false;
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SettingButton_Click
+        /// 
+        /// <summary>
+        /// 設定ボタンが押下された時に実行されるイベントハンドラです。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SettingButton_Click(object sender, EventArgs e)
+        {
+            var dialog = new SettingForm();
+            dialog.ShowDialog();
         }
 
         /* ----------------------------------------------------------------- */
@@ -169,38 +182,34 @@ namespace CubeClockObserver
             Activate();
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Document_Click
-        /// 
-        /// <summary>
-        /// Web ブラウザ領域がクリックされた時に実行されるイベントハンドラ
-        /// です。リンク先に移動する際、既定のブラウザを使用します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void Document_Click(object sender, HtmlElementEventArgs e)
-        {
-            var element = AdWebBrowser.Document.GetElementFromPoint(e.MousePosition);
-            while (element != null)
-            {
-                if (element.TagName.ToLower() == "a")
-                {
-                    e.ReturnValue = false;
-                    var link = element.GetAttribute("href");
-                    if (string.IsNullOrEmpty(link)) return;
-
-                    try { System.Diagnostics.Process.Start(link); }
-                    catch (Exception err) { Trace.WriteLine(err.ToString()); }
-                    return;
-                }
-                element = element.Parent;
-            }
-        }
-
         #endregion
 
         #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TimeToString
+        /// 
+        /// <summary>
+        /// ミリ秒単位の時間を時間/分/秒の形式に変換します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string TimeToString(int offset)
+        {
+            var value = (int)(offset / 1000);
+            var msec  = offset % 1000;
+            var hour  = (int)(value / 3600);
+            var min   = (int)((value % 3600) / 60);
+            var sec   = value % 60 + msec / 1000.0;
+            
+            var dest = new System.Text.StringBuilder();
+            if (hour > 0) dest.AppendFormat(" {0} {1}", hour, Properties.Resources.HourUnit);
+            if (min > 0) dest.AppendFormat(" {0} {1}", min, Properties.Resources.MinuteUnit);
+            dest.AppendFormat(" {0} {1:f3}", sec, Properties.Resources.SecondUnit);
+
+            return dest.ToString();
+        }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -213,13 +222,13 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void UpdateNotifyIcon()
         {
-            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalSeconds);
+            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalMilliseconds);
             if (offset > _threshold)
             {
                 if (_notified) return;
                 var format = (_observer.LocalClockOffset.TotalMilliseconds <= 0) ?
                     Properties.Resources.TimeFastWarning : Properties.Resources.TimeBehindWarning;
-                var message = string.Format(format, offset);
+                var message = string.Format(format, TimeToString(offset));
                 SyncNotifyIcon.Text = message;
                 SyncNotifyIcon.BalloonTipText = message;
                 SyncNotifyIcon.ShowBalloonTip(30000);

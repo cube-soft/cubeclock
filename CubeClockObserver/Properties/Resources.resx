@@ -120,10 +120,22 @@
   <data name="AdUrl" xml:space="preserve">
     <value>http://cielquis.net/trash/ad-dummy.html</value>
   </data>
+  <data name="ClockFormat" xml:space="preserve">
+    <value>yyyy/MM/dd hh:mm:ss.fff</value>
+  </data>
+  <data name="HourUnit" xml:space="preserve">
+    <value>時間</value>
+  </data>
+  <data name="MinuteUnit" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="SecondUnit" xml:space="preserve">
+    <value>秒</value>
+  </data>
   <data name="TimeBehindWarning" xml:space="preserve">
-    <value>時刻が {0} 秒遅れています。</value>
+    <value>時刻が{0}遅れています。</value>
   </data>
   <data name="TimeFastWarning" xml:space="preserve">
-    <value>時刻が {0} 秒進んでいます。</value>
+    <value>時刻が{0}進んでいます。</value>
   </data>
 </root>
