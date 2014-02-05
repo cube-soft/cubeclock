@@ -37,6 +37,7 @@
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
             this.SyncButton = new System.Windows.Forms.Button();
             this.SyncNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.SettingButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -89,7 +90,7 @@
             this.SyncButton.Location = new System.Drawing.Point(12, 72);
             this.SyncButton.Name = "SyncButton";
             this.SyncButton.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.SyncButton.Size = new System.Drawing.Size(303, 28);
+            this.SyncButton.Size = new System.Drawing.Size(224, 28);
             this.SyncButton.TabIndex = 5;
             this.SyncButton.Text = "時刻を同期する...";
             this.SyncButton.UseVisualStyleBackColor = true;
@@ -106,11 +107,22 @@
             this.SyncNotifyIcon.BalloonTipClicked += new System.EventHandler(this.OpenItem_Click);
             this.SyncNotifyIcon.DoubleClick += new System.EventHandler(this.OpenItem_Click);
             // 
+            // SettingButton
+            // 
+            this.SettingButton.Location = new System.Drawing.Point(242, 72);
+            this.SettingButton.Name = "SettingButton";
+            this.SettingButton.Size = new System.Drawing.Size(75, 28);
+            this.SettingButton.TabIndex = 6;
+            this.SettingButton.Text = "設定...";
+            this.SettingButton.UseVisualStyleBackColor = true;
+            this.SettingButton.Click += new System.EventHandler(this.SettingButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(329, 112);
+            this.Controls.Add(this.SettingButton);
             this.Controls.Add(this.SyncButton);
             this.Controls.Add(this.ServerClockLabel);
             this.Controls.Add(this.LocalClockLabel);
@@ -137,6 +149,7 @@
         private System.Windows.Forms.Timer ClockTimer;
         private System.Windows.Forms.Button SyncButton;
         private System.Windows.Forms.NotifyIcon SyncNotifyIcon;
+        private System.Windows.Forms.Button SettingButton;
 
     }
 }

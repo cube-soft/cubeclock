@@ -127,6 +127,21 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
+        /// SettingButton_Click
+        /// 
+        /// <summary>
+        /// 設定ボタンが押下された時に実行されるイベントハンドラです。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SettingButton_Click(object sender, EventArgs e)
+        {
+            var dialog = new SettingForm();
+            dialog.ShowDialog();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// MainForm_FormClosing
         ///
         /// <summary>
