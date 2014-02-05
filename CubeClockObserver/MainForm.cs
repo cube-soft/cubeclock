@@ -225,22 +225,6 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ResetNotify
-        ///
-        /// <summary>
-        /// 通知情報に関わる状態をリセットします。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ResetNotify()
-        {
-            _notified = false;
-            _sw.Reset();
-            SyncNotifyIcon.Text = "CubeClock";
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// TimeToString
         /// 
         /// <summary>
@@ -262,6 +246,22 @@ namespace CubeClockObserver
             dest.AppendFormat(" {0} {1:f3}", sec, Properties.Resources.SecondUnit);
 
             return dest.ToString();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ResetNotify
+        ///
+        /// <summary>
+        /// 通知情報に関わる状態をリセットします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ResetNotify()
+        {
+            _notified = false;
+            _sw.Reset();
+            SyncNotifyIcon.Text = "CubeClock";
         }
 
         /* ----------------------------------------------------------------- */
