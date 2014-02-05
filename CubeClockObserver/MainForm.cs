@@ -56,8 +56,39 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         public MainForm()
         {
+            _setting = new CubeClock.UserSetting();
+            _setting.Load();
             InitializeComponent();
+            InitializeUserComponent();
+        }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm (constructor)
+        /// 
+        /// <summary>
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public MainForm(CubeClock.UserSetting setting)
+        {
+            _setting = setting;
+            InitializeComponent();
+            InitializeUserComponent();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitializeUserComponent
+        /// 
+        /// <summary>
+        /// GUI を初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void InitializeUserComponent()
+        {
             var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
             SyncButton.Image = shield.ToBitmap();
             SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
@@ -69,7 +100,7 @@ namespace CubeClockObserver
 
         #endregion
 
-        #region Event handlers
+        #region Other components' event handlers
 
         /* ----------------------------------------------------------------- */
         ///
@@ -110,7 +141,9 @@ namespace CubeClockObserver
             try
             {
                 var info   = new System.Diagnostics.ProcessStartInfo();
-                var dir    = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var dir    = !string.IsNullOrEmpty(_setting.InstallDirectory) ?
+                    _setting.InstallDirectory :
+                    System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 var exec   = System.IO.Path.Combine(dir, "CubeClockAdjuster.exe");
                 var offset = (int)_observer.LocalClockOffset.TotalMilliseconds;
                 info.FileName = exec;
@@ -120,7 +153,7 @@ namespace CubeClockObserver
                 process.StartInfo = info;
                 process.Start();
 
-                _notified = false;
+                ResetNotify();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
@@ -136,8 +169,12 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void SettingButton_Click(object sender, EventArgs e)
         {
-            var dialog = new SettingForm();
-            dialog.ShowDialog();
+            var dialog = new SettingForm(_setting);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _observer.Reset(_setting.Sever);
+                ResetNotify();
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -154,7 +191,7 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_exit)
+            if (_setting.Resident && !_exit)
             {
                 Hide();
                 e.Cancel = true;
@@ -213,19 +250,45 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
+        /// ResetNotify
+        ///
+        /// <summary>
+        /// 通知情報に関わる状態をリセットします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ResetNotify()
+        {
+            _notified = false;
+            _sw.Reset();
+            SyncNotifyIcon.Text = "CubeClock";
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// UpdateNotifyIcon
         /// 
         /// <summary>
         /// タスクトレイ上のアイコンの表示状態を更新します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 何らかの変更（設定の変更、時刻調整の実行）が行われてすぐの場合
+        /// 変更後に NTP との通信が行われていない状態で（通知するかどうかの）
+        /// 判断が行なわれてしまう事があるので、通知条件に達してから数秒程度
+        /// 表示を遅らせています。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         private void UpdateNotifyIcon()
         {
             var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalMilliseconds);
-            if (offset > _threshold)
+            if (_setting.Notify && offset > _setting.NotifyThreshold)
             {
                 if (_notified) return;
+                if (!_sw.IsRunning) _sw.Start();
+                if (_sw.ElapsedMilliseconds < 2000) return;
+
                 var format = (_observer.LocalClockOffset.TotalMilliseconds <= 0) ?
                     Properties.Resources.TimeFastWarning : Properties.Resources.TimeBehindWarning;
                 var message = string.Format(format, TimeToString(offset));
@@ -233,8 +296,9 @@ namespace CubeClockObserver
                 SyncNotifyIcon.BalloonTipText = message;
                 SyncNotifyIcon.ShowBalloonTip(30000);
                 _notified = true;
+                _sw.Reset();
             }
-            else SyncNotifyIcon.Text = "CubeClock";
+            else ResetNotify();
         }
 
         /* ----------------------------------------------------------------- */
@@ -273,9 +337,10 @@ namespace CubeClockObserver
         #endregion
 
         #region Variables
+        private CubeClock.UserSetting _setting = new CubeClock.UserSetting();
         private CubeClock.Ntp.Observer _observer = new CubeClock.Ntp.Observer();
-        private int _threshold = 5;
         private bool _notified = false;
+        private Stopwatch _sw = new Stopwatch(); // Timer for delayed notify
         private bool _exit = false;
         private DateTime _last = DateTime.Now;
         #endregion

@@ -46,7 +46,15 @@ namespace CubeClockObserver
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            var setting = new CubeClock.UserSetting();
+            setting.Load();
+            if (setting.Resident && setting.HideOnLaunch)
+            {
+                var form = new MainForm(setting);
+                Application.Run();
+            }
+            else  Application.Run(new MainForm(setting));
         }
     }
 }
