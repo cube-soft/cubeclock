@@ -57,7 +57,12 @@ namespace CubeClockObserver
         public MainForm()
         {
             InitializeComponent();
-
+            String[] cmd = System.Environment.GetCommandLineArgs();
+            if (cmd.Length > 1 && cmd[1].Equals("/force"))
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+            }
             var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
             SyncButton.Image = shield.ToBitmap();
             SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
