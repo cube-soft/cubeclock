@@ -48,8 +48,15 @@ namespace CubeClockAdjuster
             {
                 var msec = int.Parse(args[0]);
                 CubeClock.SystemClock.Adjust(DateTime.Now.AddMilliseconds(msec));
+
+                var url = String.Format("{0}?t={1:f3}", _EndPoint, msec / 1000.0);
+                System.Diagnostics.Process.Start(url);
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
+
+        #region Static variables
+        private static readonly string _EndPoint = "http://s.cube-soft.jp/timer.php";
+        #endregion
     }
 }

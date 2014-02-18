@@ -70,7 +70,62 @@ namespace CubeClockObserver.Properties {
         }
         
         /// <summary>
-        ///   時刻が {0} 秒遅れています。 に類似しているローカライズされた文字列を検索します。
+        ///   yyyy/MM/dd hh:mm:ss.fff に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ClockFormat {
+            get {
+                return ResourceManager.GetString("ClockFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   CubeClock エラー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ErrorTitle {
+            get {
+                return ResourceManager.GetString("ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   時間 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HourUnit {
+            get {
+                return ResourceManager.GetString("HourUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   分 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MinuteUnit {
+            get {
+                return ResourceManager.GetString("MinuteUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   秒 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SecondUnit {
+            get {
+                return ResourceManager.GetString("SecondUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   サーバとの通信に失敗しました。
+        ///サーバのホスト名、または IP アドレスを確認して下さい。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ServerFailed {
+            get {
+                return ResourceManager.GetString("ServerFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   時刻が{0}遅れています。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TimeBehindWarning {
             get {
@@ -79,7 +134,7 @@ namespace CubeClockObserver.Properties {
         }
         
         /// <summary>
-        ///   時刻が {0} 秒進んでいます。 に類似しているローカライズされた文字列を検索します。
+        ///   時刻が{0}進んでいます。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TimeFastWarning {
             get {

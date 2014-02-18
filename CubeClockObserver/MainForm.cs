@@ -56,27 +56,72 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         public MainForm()
         {
+            _setting.Load();
             InitializeComponent();
+            InitializeUserComponent();
+            ClockTimer.Start();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitializeUserComponent
+        /// 
+        /// <summary>
+        /// GUI の表示に関連する初期化を行います。
+        /// 初期化はユーザー設定よりコマンドライン引数が優先されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void InitializeUserComponent()
+        {
+            var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
+            SyncButton.Image = shield.ToBitmap();
+            SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
+            LocalClockLabel.Text = DateTime.Now.ToString(Properties.Resources.ClockFormat);
+            ServerClockLabel.Text = LocalClockLabel.Text;
+
             String[] cmd = System.Environment.GetCommandLineArgs();
             if (cmd.Length > 1 && cmd[1].Equals("/force"))
             {
                 this.Show();
+                ShowInTaskbar = true;
                 this.WindowState = FormWindowState.Normal;
+            } else if (_setting.Resident && _setting.HideOnLaunch)
+            {
+                ShowInTaskbar = false;
+                WindowState = FormWindowState.Minimized;
             }
-            var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
-            SyncButton.Image = shield.ToBitmap();
-            SyncNotifyIcon.ContextMenuStrip = CreateContextMenuStrip();
-            LocalClockLabel.Text = DateTime.Now.ToString();
-            ServerClockLabel.Text = LocalClockLabel.Text;
-            AdWebBrowser.Url = new Uri(Properties.Resources.AdUrl);
-            AdWebBrowser.Document.Click += new HtmlElementEventHandler(Document_Click);
-
-            ClockTimer.Start();
         }
 
         #endregion
 
-        #region Event handlers
+        #region MainForm's event handlers
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// OnFormClosing
+        ///
+        /// <summary>
+        /// Close() メソッドが実行された時に実行されるイベントハンドラです。
+        /// ユーザが×ボタンを押した場合にはタスクトレイにのみ表示し、
+        /// プロセス自体の終了は、タスクトレイのメニューから「終了」を
+        /// 選択した場合のみとします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        protected override void  OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_setting.Resident && !_closing)
+            {
+                Hide();
+                e.Cancel = true;
+            }
+            base.OnFormClosing(e);
+        }
+
+        #endregion
+
+        #region Other components' event handlers
 
         /* ----------------------------------------------------------------- */
         ///
@@ -96,8 +141,8 @@ namespace CubeClockObserver
                 _last = local;
 
                 var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString();
-                ServerClockLabel.Text = server.ToString();
+                LocalClockLabel.Text  = local.ToString(Properties.Resources.ClockFormat);
+                ServerClockLabel.Text = server.ToString(Properties.Resources.ClockFormat);
                 UpdateNotifyIcon();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
@@ -117,7 +162,9 @@ namespace CubeClockObserver
             try
             {
                 var info   = new System.Diagnostics.ProcessStartInfo();
-                var dir    = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var dir    = !string.IsNullOrEmpty(_setting.InstallDirectory) ?
+                    _setting.InstallDirectory :
+                    System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 var exec   = System.IO.Path.Combine(dir, "CubeClockAdjuster.exe");
                 var offset = (int)_observer.LocalClockOffset.TotalMilliseconds;
                 info.FileName = exec;
@@ -127,29 +174,27 @@ namespace CubeClockObserver
                 process.StartInfo = info;
                 process.Start();
 
-                _notified = false;
+                ResetNotify();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm_FormClosing
-        ///
+        /// SettingButton_Click
+        /// 
         /// <summary>
-        /// Close() メソッドが実行された時に実行されるイベントハンドラです。
-        /// ユーザが×ボタンを押した場合にはタスクトレイにのみ表示し、
-        /// プロセス自体の終了は、タスクトレイのメニューから「終了」を
-        /// 選択した場合のみとします。
+        /// 設定ボタンが押下された時に実行されるイベントハンドラです。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void SettingButton_Click(object sender, EventArgs e)
         {
-            if (!_exit)
+            var dialog = new SettingForm(_setting);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Hide();
-                e.Cancel = true;
+                _observer.Reset(_setting.Sever);
+                ResetNotify();
             }
         }
 
@@ -168,39 +213,11 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void OpenItem_Click(object sender, EventArgs e)
         {
+            WindowState = FormWindowState.Normal;
+            if (!ShowInTaskbar) ShowInTaskbar = true;
             if (Visible) return;
             Show();
-            WindowState = FormWindowState.Normal;
             Activate();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Document_Click
-        /// 
-        /// <summary>
-        /// Web ブラウザ領域がクリックされた時に実行されるイベントハンドラ
-        /// です。リンク先に移動する際、既定のブラウザを使用します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void Document_Click(object sender, HtmlElementEventArgs e)
-        {
-            var element = AdWebBrowser.Document.GetElementFromPoint(e.MousePosition);
-            while (element != null)
-            {
-                if (element.TagName.ToLower() == "a")
-                {
-                    e.ReturnValue = false;
-                    var link = element.GetAttribute("href");
-                    if (string.IsNullOrEmpty(link)) return;
-
-                    try { System.Diagnostics.Process.Start(link); }
-                    catch (Exception err) { Trace.WriteLine(err.ToString()); }
-                    return;
-                }
-                element = element.Parent;
-            }
         }
 
         #endregion
@@ -209,28 +226,80 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
+        /// TimeToString
+        /// 
+        /// <summary>
+        /// ミリ秒単位の時間を時間/分/秒の形式に変換します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string TimeToString(int offset)
+        {
+            var value = (int)(offset / 1000);
+            var msec  = offset % 1000;
+            var hour  = (int)(value / 3600);
+            var min   = (int)((value % 3600) / 60);
+            var sec   = value % 60 + msec / 1000.0;
+            
+            var dest = new System.Text.StringBuilder();
+            if (hour > 0) dest.AppendFormat(" {0} {1}", hour, Properties.Resources.HourUnit);
+            if (hour > 0 || min > 0) dest.AppendFormat(" {0} {1}", min, Properties.Resources.MinuteUnit);
+            dest.AppendFormat(" {0} {1:f3}", sec, Properties.Resources.SecondUnit);
+
+            return dest.ToString();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ResetNotify
+        ///
+        /// <summary>
+        /// 通知情報に関わる状態をリセットします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ResetNotify()
+        {
+            _notified = false;
+            _sw.Reset();
+            SyncNotifyIcon.Text = "CubeClock";
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// UpdateNotifyIcon
         /// 
         /// <summary>
         /// タスクトレイ上のアイコンの表示状態を更新します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 何らかの変更（設定の変更、時刻調整の実行）が行われてすぐの場合
+        /// 変更後に NTP との通信が行われていない状態で（通知するかどうかの）
+        /// 判断が行なわれてしまう事があるので、通知条件に達してから数秒程度
+        /// 表示を遅らせています。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         private void UpdateNotifyIcon()
         {
-            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalSeconds);
-            if (offset > _threshold)
+            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalMilliseconds);
+            if (_setting.Notify && offset > _setting.NotifyThreshold)
             {
                 if (_notified) return;
+                if (!_sw.IsRunning) _sw.Start();
+                if (_sw.ElapsedMilliseconds < 2000) return;
+
                 var format = (_observer.LocalClockOffset.TotalMilliseconds <= 0) ?
                     Properties.Resources.TimeFastWarning : Properties.Resources.TimeBehindWarning;
-                var message = string.Format(format, offset);
+                var message = string.Format(format, TimeToString(offset));
                 SyncNotifyIcon.Text = message;
                 SyncNotifyIcon.BalloonTipText = message;
                 SyncNotifyIcon.ShowBalloonTip(30000);
                 _notified = true;
+                _sw.Reset();
             }
-            else SyncNotifyIcon.Text = "CubeClock";
+            else ResetNotify();
         }
 
         /* ----------------------------------------------------------------- */
@@ -258,8 +327,8 @@ namespace CubeClockObserver
             exit.Size = new System.Drawing.Size(100, 22);
             exit.Text = "終了";
             exit.Click += (sender, e) => {
-                this._exit = true;
-                this.Close();
+                _closing = true;
+                Close();
             };
             dest.Items.Add(exit);
 
@@ -269,10 +338,11 @@ namespace CubeClockObserver
         #endregion
 
         #region Variables
+        private CubeClock.UserSetting _setting = new CubeClock.UserSetting();
         private CubeClock.Ntp.Observer _observer = new CubeClock.Ntp.Observer();
-        private int _threshold = 5;
         private bool _notified = false;
-        private bool _exit = false;
+        private bool _closing = false;
+        private Stopwatch _sw = new Stopwatch(); // Timer for delayed notify
         private DateTime _last = DateTime.Now;
         #endregion
     }
