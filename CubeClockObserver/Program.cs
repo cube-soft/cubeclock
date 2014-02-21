@@ -44,6 +44,8 @@ namespace CubeClockObserver
         [STAThread]
         static void Main()
         {
+            if (Cube.Process.TryActivate()) return;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
