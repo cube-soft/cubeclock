@@ -165,9 +165,8 @@ namespace CubeClockObserver
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo = info;
+                process.Exited += (s, ev) => { ResetNotify(); };
                 process.Start();
-
-                ResetNotify();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
