@@ -165,26 +165,12 @@ namespace CubeClockObserver
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo = info;
-                process.Exited += new EventHandler(SyncProcess_Exited);
+                process.Exited += (s, ev) => { ResetNotify(); };
                 process.Start();
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// SyncProcess_Exited
-        /// 
-        /// <summary>
-        /// 時刻の同期処理が終了した際に実行されるイベントハンドラです。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void SyncProcess_Exited(object sender, System.EventArgs e)
-        {
-            ResetNotify();
-        }
-        
         /* ----------------------------------------------------------------- */
         ///
         /// SettingButton_Click
