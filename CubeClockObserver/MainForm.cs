@@ -56,9 +56,23 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         public MainForm()
         {
-            _setting.Load();
             InitializeComponent();
-            InitializeUserComponent();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm (constructor)
+        /// 
+        /// <summary>
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public MainForm(string[] args)
+            : this()
+        {
+            _setting.Load();
+            InitializeUserComponent(args);
             ClockTimer.Start();
         }
 
@@ -68,10 +82,11 @@ namespace CubeClockObserver
         /// 
         /// <summary>
         /// GUI の表示に関連する初期化を行います。
+        /// 初期化はユーザー設定よりコマンドライン引数が優先されます。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void InitializeUserComponent()
+        private void InitializeUserComponent(string[] args)
         {
             var shield = new Icon(SystemIcons.Shield, new Size(16, 16));
             SyncButton.Image = shield.ToBitmap();
@@ -79,7 +94,8 @@ namespace CubeClockObserver
             LocalClockLabel.Text = DateTime.Now.ToString(Properties.Resources.ClockFormat);
             ServerClockLabel.Text = LocalClockLabel.Text;
 
-            if (_setting.Resident && _setting.HideOnLaunch)
+            bool force = (args.Length > 0 && args[0].Equals("/force"));
+            if (!force && _setting.Resident && _setting.HideOnLaunch)
             {
                 ShowInTaskbar = false;
                 WindowState = FormWindowState.Minimized;

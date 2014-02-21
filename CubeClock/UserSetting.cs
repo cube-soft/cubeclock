@@ -303,7 +303,7 @@ namespace CubeClock
         private string _server = "ntp.cube-soft.jp";
         private bool _boot = true;
         private bool _resident = true;
-        private bool _hide = false;
+        private bool _hide = true;
         private bool _notify = true;
         private int _threshold = 1000;
         #endregion
