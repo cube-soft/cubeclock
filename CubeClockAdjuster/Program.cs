@@ -46,7 +46,7 @@ namespace CubeClockAdjuster
             if (args.Length < 1) return;
             try
             {
-                var msec = int.Parse(args[0]);
+                var msec = long.Parse(args[0]);
                 CubeClock.SystemClock.Adjust(DateTime.Now.AddMilliseconds(msec));
 
                 var url = String.Format("{0}?t={1:f3}", _EndPoint, msec / 1000.0);

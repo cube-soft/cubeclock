@@ -175,7 +175,7 @@ namespace CubeClockObserver
                     _setting.InstallDirectory :
                     System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 var exec   = System.IO.Path.Combine(dir, "CubeClockAdjuster.exe");
-                var offset = (int)_observer.LocalClockOffset.TotalMilliseconds;
+                var offset = (long)_observer.LocalClockOffset.TotalMilliseconds;
                 info.FileName = exec;
                 info.Arguments = offset.ToString();
 
@@ -241,7 +241,7 @@ namespace CubeClockObserver
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private string TimeToString(int offset)
+        private string TimeToString(long offset)
         {
             var value = (int)(offset / 1000);
             var msec  = offset % 1000;
@@ -291,7 +291,7 @@ namespace CubeClockObserver
         /* ----------------------------------------------------------------- */
         private void UpdateNotifyIcon()
         {
-            var offset = (int)Math.Abs(_observer.LocalClockOffset.TotalMilliseconds);
+            var offset = (long)Math.Abs(_observer.LocalClockOffset.TotalMilliseconds);
             if (_setting.Notify && offset > _setting.NotifyThreshold)
             {
                 if (_notified) return;
