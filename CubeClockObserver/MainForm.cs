@@ -74,6 +74,8 @@ namespace CubeClockObserver
             _setting.Load();
             InitializeUserComponent(args);
             ClockTimer.Start();
+            BaloonUpdateTimer.Interval = _setting.NotifyInterval;
+            BaloonUpdateTimer.Start();
         }
 
         /* ----------------------------------------------------------------- */
@@ -145,15 +147,31 @@ namespace CubeClockObserver
         {
             try
             {
-                var local  = DateTime.Now;
+                var local = DateTime.Now;
                 if (Math.Abs((local - _last).TotalSeconds) > 3.0) _observer.Reset();
                 _last = local;
 
                 var server = local + _observer.LocalClockOffset;
-                LocalClockLabel.Text  = local.ToString(Properties.Resources.ClockFormat);
+                LocalClockLabel.Text = local.ToString(Properties.Resources.ClockFormat);
                 ServerClockLabel.Text = server.ToString(Properties.Resources.ClockFormat);
                 UpdateNotifyIcon();
             }
+            catch (Exception err) { Trace.WriteLine(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// BaloonUpdateTimer_Tick
+        /// 
+        /// <summary>
+        /// 一定時間ごとに実行されるイベントハンドラです。
+        /// ResetNotifyメソッドを呼び出すことで通知をリセットします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void BaloonUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            try { ResetNotify(); }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 

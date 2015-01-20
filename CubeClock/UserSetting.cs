@@ -190,6 +190,36 @@ namespace CubeClock
             set { _threshold = value; }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpdateInterval
+        /// 
+        /// <summary>
+        /// 問い合わせ間隔を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public int UpdateInterval
+        {
+            get { return _updateInterval; }
+            set { _updateInterval = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// NotifyInterval
+        /// 
+        /// <summary>
+        /// 通知関連の情報をリセットする間隔（ミリ秒）を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public int NotifyInterval
+        {
+            get { return _notifyInterval; }
+            set { _notifyInterval = value; }
+        }
+
         #endregion
 
         #region Public methods
@@ -230,6 +260,12 @@ namespace CubeClock
 
                 var threshold = setting.Root.Find(_RegThreshold);
                 if (threshold != null) _threshold = threshold.GetValue(_threshold);
+
+                var upint = setting.Root.Find(_RegUpdateInterval);
+                if (upint != null) _updateInterval = upint.GetValue(_updateInterval);
+
+                var notifyint = setting.Root.Find(_RegNotifyInterval);
+                if (notifyint != null) _notifyInterval = notifyint.GetValue(_notifyInterval);
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
@@ -257,6 +293,8 @@ namespace CubeClock
                 setting.Root.Add(new Cube.Settings.Node(_RegHide, _hide));
                 setting.Root.Add(new Cube.Settings.Node(_RegNotify, _notify));
                 setting.Root.Add(new Cube.Settings.Node(_RegThreshold, _threshold));
+                setting.Root.Add(new Cube.Settings.Node(_RegUpdateInterval, _updateInterval));
+                setting.Root.Add(new Cube.Settings.Node(_RegNotifyInterval, _notifyInterval));
 
                 setting.Write(root);
 
@@ -306,6 +344,8 @@ namespace CubeClock
         private bool _hide = true;
         private bool _notify = true;
         private int _threshold = 1000;
+        private int _updateInterval = 1000;
+        private int _notifyInterval = 1000*3600*6;
         #endregion
 
         #region Constant variables
@@ -320,6 +360,8 @@ namespace CubeClock
         private static readonly string _RegHide = "HideOnLaunch";
         private static readonly string _RegNotify = "Notify";
         private static readonly string _RegThreshold = "NotifyThreshold";
+        private static readonly string _RegUpdateInterval = "UpdateInterval";
+        private static readonly string _RegNotifyInterval = "NotifyInterval";
         #endregion
     }
 }

@@ -38,6 +38,7 @@
             this.SyncButton = new System.Windows.Forms.Button();
             this.SyncNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SettingButton = new System.Windows.Forms.Button();
+            this.BaloonUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -117,6 +118,10 @@
             this.SettingButton.UseVisualStyleBackColor = true;
             this.SettingButton.Click += new System.EventHandler(this.SettingButton_Click);
             // 
+            // BaloonUpdateTimer
+            // 
+            this.BaloonUpdateTimer.Tick += new System.EventHandler(this.BaloonUpdateTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -149,6 +154,7 @@
         private System.Windows.Forms.Button SyncButton;
         private System.Windows.Forms.NotifyIcon SyncNotifyIcon;
         private System.Windows.Forms.Button SettingButton;
+        private System.Windows.Forms.Timer BaloonUpdateTimer;
 
     }
 }
