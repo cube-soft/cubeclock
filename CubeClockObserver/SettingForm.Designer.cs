@@ -37,9 +37,15 @@
             this.NotifyCheckBox = new System.Windows.Forms.CheckBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
-            this.NotifyThresholdLabel = new System.Windows.Forms.Label();
             this.NotifyThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.UpdateIntervalNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.NotifyThresholdLabel = new System.Windows.Forms.Label();
+            this.UpdateIntervalLabel = new System.Windows.Forms.Label();
+            this.NotifyIntervalNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.NotifyIntervalLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.NotifyThresholdNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdateIntervalNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NotifyIntervalNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // ServerLabel
@@ -102,7 +108,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(176, 185);
+            this.SaveButton.Location = new System.Drawing.Point(176, 206);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(100, 25);
             this.SaveButton.TabIndex = 0;
@@ -113,22 +119,13 @@
             // ExitButton
             // 
             this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ExitButton.Location = new System.Drawing.Point(282, 185);
+            this.ExitButton.Location = new System.Drawing.Point(282, 206);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(100, 25);
             this.ExitButton.TabIndex = 1;
             this.ExitButton.Text = "キャンセル";
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
-            // 
-            // NotifyThresholdLabel
-            // 
-            this.NotifyThresholdLabel.AutoSize = true;
-            this.NotifyThresholdLabel.Location = new System.Drawing.Point(116, 127);
-            this.NotifyThresholdLabel.Name = "NotifyThresholdLabel";
-            this.NotifyThresholdLabel.Size = new System.Drawing.Size(152, 12);
-            this.NotifyThresholdLabel.TabIndex = 100;
-            this.NotifyThresholdLabel.Text = "ミリ秒以下の場合は通知しない";
             // 
             // NotifyThresholdNumericUpDown
             // 
@@ -143,11 +140,88 @@
             this.NotifyThresholdNumericUpDown.TabIndex = 7;
             this.NotifyThresholdNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // UpdateIntervalNumericUpDown
+            // 
+            this.UpdateIntervalNumericUpDown.Location = new System.Drawing.Point(14, 150);
+            this.UpdateIntervalNumericUpDown.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.UpdateIntervalNumericUpDown.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.UpdateIntervalNumericUpDown.Name = "UpdateIntervalNumericUpDown";
+            this.UpdateIntervalNumericUpDown.Size = new System.Drawing.Size(80, 19);
+            this.UpdateIntervalNumericUpDown.TabIndex = 101;
+            this.UpdateIntervalNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.UpdateIntervalNumericUpDown.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // NotifyThresholdLabel
+            // 
+            this.NotifyThresholdLabel.AutoSize = true;
+            this.NotifyThresholdLabel.Location = new System.Drawing.Point(116, 127);
+            this.NotifyThresholdLabel.Name = "NotifyThresholdLabel";
+            this.NotifyThresholdLabel.Size = new System.Drawing.Size(152, 12);
+            this.NotifyThresholdLabel.TabIndex = 100;
+            this.NotifyThresholdLabel.Text = "ミリ秒以下の場合は通知しない";
+            // 
+            // UpdateIntervalLabel
+            // 
+            this.UpdateIntervalLabel.AutoSize = true;
+            this.UpdateIntervalLabel.Location = new System.Drawing.Point(100, 152);
+            this.UpdateIntervalLabel.Name = "UpdateIntervalLabel";
+            this.UpdateIntervalLabel.Size = new System.Drawing.Size(160, 12);
+            this.UpdateIntervalLabel.TabIndex = 102;
+            this.UpdateIntervalLabel.Text = "ミリ秒ごとにNTPサーバと通信する";
+            // 
+            // NotifyIntervalNumericUpDown
+            // 
+            this.NotifyIntervalNumericUpDown.Location = new System.Drawing.Point(14, 175);
+            this.NotifyIntervalNumericUpDown.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.NotifyIntervalNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NotifyIntervalNumericUpDown.Name = "NotifyIntervalNumericUpDown";
+            this.NotifyIntervalNumericUpDown.Size = new System.Drawing.Size(80, 19);
+            this.NotifyIntervalNumericUpDown.TabIndex = 103;
+            this.NotifyIntervalNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NotifyIntervalNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // NotifyIntervalLabel
+            // 
+            this.NotifyIntervalLabel.AutoSize = true;
+            this.NotifyIntervalLabel.Location = new System.Drawing.Point(100, 177);
+            this.NotifyIntervalLabel.Name = "NotifyIntervalLabel";
+            this.NotifyIntervalLabel.Size = new System.Drawing.Size(139, 12);
+            this.NotifyIntervalLabel.TabIndex = 104;
+            this.NotifyIntervalLabel.Text = "時間ごとに通知をリセットする";
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(394, 222);
+            this.ClientSize = new System.Drawing.Size(394, 243);
+            this.Controls.Add(this.NotifyIntervalLabel);
+            this.Controls.Add(this.NotifyIntervalNumericUpDown);
+            this.Controls.Add(this.UpdateIntervalLabel);
+            this.Controls.Add(this.UpdateIntervalNumericUpDown);
             this.Controls.Add(this.NotifyThresholdLabel);
             this.Controls.Add(this.NotifyThresholdNumericUpDown);
             this.Controls.Add(this.ExitButton);
@@ -165,6 +239,8 @@
             this.Name = "SettingForm";
             this.Text = "CubeClock 設定";
             ((System.ComponentModel.ISupportInitialize)(this.NotifyThresholdNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdateIntervalNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NotifyIntervalNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,7 +256,11 @@
         private System.Windows.Forms.CheckBox NotifyCheckBox;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Button ExitButton;
-        private System.Windows.Forms.Label NotifyThresholdLabel;
         private System.Windows.Forms.NumericUpDown NotifyThresholdNumericUpDown;
+        private System.Windows.Forms.NumericUpDown UpdateIntervalNumericUpDown;
+        private System.Windows.Forms.Label NotifyThresholdLabel;
+        private System.Windows.Forms.Label UpdateIntervalLabel;
+        private System.Windows.Forms.NumericUpDown NotifyIntervalNumericUpDown;
+        private System.Windows.Forms.Label NotifyIntervalLabel;
     }
 }

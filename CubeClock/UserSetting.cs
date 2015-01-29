@@ -195,14 +195,14 @@ namespace CubeClock
         /// UpdateInterval
         /// 
         /// <summary>
-        /// 問い合わせ間隔を取得、または設定します。
+        /// NTPサーバへの問い合わせ間隔を取得、または設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public int UpdateInterval
         {
             get { return _updateInterval; }
-            set { _updateInterval = value; }
+            set { if(value > 0) _updateInterval = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -217,7 +217,7 @@ namespace CubeClock
         public int NotifyInterval
         {
             get { return _notifyInterval; }
-            set { _notifyInterval = value; }
+            set { if (value > 0) _notifyInterval = value; }
         }
 
         #endregion

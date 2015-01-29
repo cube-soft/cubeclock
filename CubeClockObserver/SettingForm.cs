@@ -162,7 +162,7 @@ namespace CubeClockObserver
 
         /* ----------------------------------------------------------------- */
         ///
-        /// LoadSetting
+        /// LoadSettings
         /// 
         /// <summary>
         /// 設定内容を GUI に反映します。
@@ -181,13 +181,15 @@ namespace CubeClockObserver
                 HideOnLaunchCheckBox.Checked = _setting.HideOnLaunch;
                 NotifyCheckBox.Checked = _setting.Notify;
                 NotifyThresholdNumericUpDown.Value = _setting.NotifyThreshold;
+                NotifyIntervalNumericUpDown.Value = _setting.NotifyInterval / (1000*3600);
+                UpdateIntervalNumericUpDown.Value = _setting.UpdateInterval;
             }
             catch (Exception err) { Trace.WriteLine(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// LoadSetting
+        /// SaveSettings
         /// 
         /// <summary>
         /// GUI の内容を UserSetting オブジェクトに保存します。
@@ -206,6 +208,8 @@ namespace CubeClockObserver
                 _setting.HideOnLaunch = HideOnLaunchCheckBox.Checked;
                 _setting.Notify = NotifyCheckBox.Checked;
                 _setting.NotifyThreshold = (int)NotifyThresholdNumericUpDown.Value;
+                _setting.NotifyInterval = (int)NotifyIntervalNumericUpDown.Value * (1000*3600);
+                _setting.UpdateInterval = (int)UpdateIntervalNumericUpDown.Value;
 
                 _setting.Save();
             }

@@ -221,6 +221,8 @@ namespace CubeClockObserver
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _observer.Reset(_setting.Sever);
+                ClockTimer.Interval = _setting.UpdateInterval;
+                BaloonUpdateTimer.Interval = _setting.NotifyInterval;
                 ResetNotify();
             }
         }
