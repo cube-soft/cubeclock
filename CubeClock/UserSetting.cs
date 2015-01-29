@@ -344,7 +344,7 @@ namespace CubeClock
         private bool _hide = true;
         private bool _notify = true;
         private int _threshold = 1000;
-        private int _updateInterval = 1000;
+        private int _updateInterval = 100;
         private int _notifyInterval = 1000*3600*6;
         #endregion
 

@@ -73,6 +73,7 @@ namespace CubeClockObserver
         {
             _setting.Load();
             InitializeUserComponent(args);
+            ClockTimer.Interval = _setting.UpdateInterval;
             ClockTimer.Start();
             BaloonUpdateTimer.Interval = _setting.NotifyInterval;
             BaloonUpdateTimer.Start();
